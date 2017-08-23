@@ -1,0 +1,28 @@
+<view class="container">
+    <view class="product_list">
+        <block wx:key="*this" wx:for="{{productList}}" wx:for-item="product">
+            <view class="item" 
+            data-product-id="{{product.id}}" 
+            data-product-code="{{product.code}}" 
+            data-product-name="{{product.name}}"
+            data-product-img="{{product.img}}"  
+            data-price="{{product.price}}"
+            bindtap="toDetail">
+                <image class="item-l pic" src="{{product.img}}"></image>
+                <view class="item-r">
+                    <view class="name">{{product.name}}</view>
+                    <view class="price">
+                        <view class="real">￥{{product.price}}</view>
+                        <view class="original" wx:if="{{product.originalPrice}}">￥{{product.originalPrice}}</view>
+                    </view>
+                    <view class="inventory" wx:if="{{product.inventory}}">
+                    库存：{{product.inventory}}
+                    </view>
+                    <button class="btn buy">
+                      立即购买
+                    </button>
+                </view>
+            </view>
+        </block>
+    </view>
+</view>

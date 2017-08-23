@@ -1,0 +1,53 @@
+<view class="address">
+    <view class="item">
+        <text class="name">收货人</text>
+        <input type="text" class="value" placeholder="姓名" bindinput="onOwnerInput"/>
+    </view>
+    <view class="item">
+        <text class="name">联系方式</text>
+        <input type="number" class="value" placeholder="手机号码" bindinput="onPhoneInput"/>
+    </view>
+    <picker bindchange="provincesChange" value="{{index}}" range="{{provinces}}">
+        <view class="picker">
+            <view class="item ">
+                <text class="name choose">省</text>
+                <view class="value choose">{{values[0] ? values[0] : (willChooseIndex == 0 ? '-- 请选择 --' : '')}}</view>
+            </view>
+        </view>
+    </picker>
+    <picker bindchange="{{willChooseIndex >= 1 ? 'citiesChange': ''}}" value="{{index}}" range="{{cities}}">
+        <view class="picker">
+            <view class="item">
+                <text class="name choose">市</text>
+                <view class="value choose">{{values[1] ? values[1] : (willChooseIndex == 1 ? '-- 请选择 --' : '')}}</view>
+            </view>
+     </view>
+    </picker>
+    <picker bindchange="{{willChooseIndex >= 2 ? 'areasChange': ''}}" value="{{index}}" range="{{areas}}">
+        <view class="picker">
+            <view class="item">
+                <text class="name choose">区/县</text>
+                <view class="value choose">{{values[2] ? values[2] : (willChooseIndex == 2 ? '-- 请选择 --' : '')}}</view>
+            </view>
+        </view>
+    </picker>
+    <picker bindchange="{{willChooseIndex >= 3 ? 'streetsChange': ''}}" value="{{index}}" range="{{streets}}">
+        <view class="picker">
+            <view class="item">
+                <text class="name choose">乡镇/街道</text>
+                <view class="value choose">{{values[3] ? values[3] : (willChooseIndex == 3 ? '-- 请选择 --' : '')}}</view>
+            </view>
+        </view>
+    </picker>
+    <view class="item">
+        <text class="name">详细地址</text>
+        <input type="text" class="value" placeholder="街道地址" bindinput="onInputAddress"/>
+    </view>
+</view>
+<view class="notice">详细地址需填写楼栋楼层或房间号信息</view>
+<button class="confirm_btn weui_btn" type="primary" bindtap="commitAddress">确认</button>
+
+<view class="toast" wx:if="{{showToast}}">
+    <icon type="warn" color="white"/>
+    <text>{{toastText}}</text>
+</view>

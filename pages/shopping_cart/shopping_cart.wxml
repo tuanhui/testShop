@@ -1,0 +1,44 @@
+<view class="cart-list" id="parent" >
+    <block wx:for="{{cartList}}" 
+          wx:key="*this" 
+          wx:for-item="cart"
+          wx:for-index="index">
+    <view class="cart-item"
+          id="item{{index}}" 
+          data-position="{{index}}"
+          animation="{{delIndex === index ? animationData : null}}" 
+          bindtouchstart="onTouchStart" 
+          bindtouchcancel="onTouchCancel" 
+          bindtouchend="onTouchEnd">
+      <view class="item-detail">
+          <radio class="check" data-position="{{index}}" value="{{index}}" checked="{{cart.checked}}" bindtap="changeCheck"/> 
+          <image class="pic" src="/imgs/pic.png"></image>
+          <view class="info">
+              <view class="name">{{cart.productName}}</view>
+              <view class="price">￥{{cart.price}}</view>
+              <view class="count-container">
+                <view class="count-item minus {{cart.count == 1 ? 'disable' : ''}}" 
+                      data-position="{{index}}" bindtap="{{cart.count == 1 ? '' : 'minus'}}">-</view>
+                <input type="number" class="count-item count" value="{{cart.count}}" />
+                <view class="count-item plus"
+                     data-position="{{index}}" bindtap="plus">+</view>
+              </view>
+          </view>
+      </view>
+      <view class="item-del" data-position="{{index}}" bindtap="delItem">
+        删除
+      </view>
+    </view>
+    </block>
+</view>
+<view class="tool-bar">
+    <view class="check-item" bindtap="{{(cartList == null || cartList.length == 0) ? '' : 'doCheckAll'}}">
+        <radio class="check-item-radio" value="0" checked="{{checkAll}}" disabled="{{cartList == null || cartList.length == 0}}"/>
+        <text class="check-item-value">全选</text>
+    </view>
+    <view class="settlement {{totalCount == 0 ? 'disable' : ''}}" bindtap="{{totalCount == 0 ? '' : 'settlement'}}">去结算<text class="settlement-value">({{totalCount< 100 ? totalCount : '99+'}}件)</text></view>
+    <view class="compute-item">
+        <view class="total">总计: <text class="total-value">￥{{totalPrice}}</text></view>
+        <text class="freight">不含运费</text>
+    </view>
+</view>

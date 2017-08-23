@@ -1,0 +1,52 @@
+<swiper
+    indicator-dots="{{indicatorDots}}"
+    autoplay="{{autoplay}}" 
+    interval="{{interval}}" 
+    duration="{{duration}}"
+    circular="{{true}}">
+    <block wx:for="{{product.imgUrls}}">
+      <swiper-item>
+        <view class="slide-image" style=" background-image: url({{item}})"/>
+      </swiper-item>
+    </block>
+</swiper>
+<view class="content">
+    <view class="info">
+        <view class="title">{{product.productName}}</view>
+        <view class="price">￥{{product.price}}</view>  
+        <view class="freight">运费:￥{{product.freight}}</view>
+    </view>
+    <view class="buy-count">
+      <text class="title">数量</text>
+     <view class="count-container">
+        <view class="count-item minus {{count == 1 ? 'disable' : ''}}" 
+        bindtap="{{count == 1 ? '' : 'minus'}}">-</view>
+        <input type="number" bindinput="onInput" class="count-item count" value="{{product.count}}" />
+        <view class="count-item plus" bindtap="plus">+</view>
+      </view>
+    </view>
+    <view class="intro">
+        <view class="title">商品详情</view>
+        <view class="content">
+            <block wx:key="*this" wx:for="{{product.introImgUrls}}" wx:for-item="intro">
+                <view class="item" style="height:450rpx;background-image: url({{intro}});background-size:100% 100%;"/>
+            </block>
+        </view>
+    </view>
+</view>
+<view class="tool-bar">
+    <view class="item-1 item-home" bindtap="toHome">
+        <image class="icon" src="/imgs/ic_home_normal.png"></image>
+        <text class="text">首页</text>
+    </view>
+    <view class="item-1 item-cart" bindtap="toCart">
+        <image class="icon" src="/imgs/ic_shopping_cart_normal.png"></image>
+        <text class="text">购物车</text>
+    </view>
+    <view class="item-2 item-add-cart" bindtap="addToCart">
+        <text class="text">加入购物车</text>
+    </view>
+    <view class="item-2 item-buy" bindtap="buy">
+        <text class="text">立即购买</text>
+    </view>
+</view>

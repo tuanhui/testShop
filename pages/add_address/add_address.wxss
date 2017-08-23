@@ -1,0 +1,73 @@
+Page {
+  background-color: rgb(249, 249, 249);
+}
+.address {
+  background-color: #fff;
+  padding-left: 20rpx;
+  font-size: 30rpx;
+}
+.address .item {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  height: 100rpx;
+  line-height: 100rpx;
+  border-bottom: 1rpx solid rgb(236, 236, 236);
+  box-sizing: border-box;
+}
+.address picker {
+   border-bottom: 1rpx solid rgb(236, 236, 236);
+}
+
+.address .item:last-child {
+  border-bottom: 0;
+}
+.address .item .name {
+  min-width: 180rpx;
+  color: rgb(97, 97, 97);
+}
+.address .item .name.choose {
+  color: rgb(159, 159, 159);
+}
+.address .item .value {
+  flex: 1;
+  height: 100rpx;
+  color: rgb(159, 159, 159);
+  line-height: 100rpx;
+}
+.address .item .value.choose {
+  color: rgb(52, 139, 255);
+}
+
+.notice {
+  color: rgb(165, 165, 165);
+  line-height: 80rpx;
+  height: 80rpx;
+  font-size: 30rpx;
+  padding: 0 20rpx;
+}
+.confirm_btn {
+  margin: 0 20rpx;
+}
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%);
+  border-radius: 8rpx;
+  text-align: center;
+  z-index: 999;
+  display: flex; 
+  padding: 20rpx;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, .8);
+  color: white;
+}
+.toast icon {
+  margin: 20rpx auto 0 auto;
+}
+.toast text {
+  height: 100rpx;
+  line-height: 100rpx;
+  font-size: 36rpx;
+}

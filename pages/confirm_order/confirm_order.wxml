@@ -1,0 +1,52 @@
+<view class="address">
+    <view class="add-address" wx:if="{{! address}}" bindtap="toAddAddress">
+        <view class="icon">＋</view>
+        <view class="text">新增收货地址</view>
+        <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+    </view>
+    <view class="address-info" bindtap="toAddressList" wx:if="{{address}}">
+      <view class="owner">{{address.owner}} {{address.phone}}</view>
+      <view class="text">{{addressInfo}}</view>
+      <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+    </view>
+</view>
+<view class="product-list">
+    <block wx:for="{{carts}}" wx:for-item="cart" wx:key="*this">
+        <view class="product">
+          <image class="pic" src="{{cart.productImg}}"></image>
+          <view class="info">
+              <view class="title">{{cart.productName}}</view>
+              <view class="price-count">
+                  <view class="price">￥{{cart.price}}</view>
+                  <view class="count" wx:if="{{isFromCart}}">x{{cart.count}}</view>
+                  <view class="count-container" wx:if="{{!isFromCart}}">
+                      <view class="count-item minus {{cart.count == 1 ? 'disable' : ''}}" 
+                      bindtap="{{cart.count == 1 ? '' : 'minus'}}">-</view>
+                      <input type="number" bindinput="onInput" class="count-item count" value="{{cart.count}}" />
+                      <view class="count-item plus" bindtap="plus">+</view>
+                    </view>
+              </view>
+          </view>
+        </view>
+    </block>
+    <view class="dispatching">
+      <text class="pattern-key">配送方式</text>
+      <text class="pattern-value">快递（免运费）</text>
+    </view>
+</view>
+
+<view class="accounts">
+    <view class="item">
+        <text class="name">商品金额</text>
+        <text class="value">￥{{cartsPrice}}</text>
+    </view>
+    <view class="item">
+        <text class="name">运费</text>
+        <text class="value">+￥{{totalFreight}}</text>
+    </view>
+    <view class="total">
+      <text class="name">实付金额：</text>
+      <text class="value">￥{{totalPrice}}</text>
+    </view>
+    <button class="comit-btn weui-btn" type="primary">微信支付</button>
+</view>

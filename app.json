@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/shopping_cart/shopping_cart",
+    "pages/mine/mine",
+    "pages/detail/detail",
+    "pages/confirm_order/confirm_order",
+    "pages/address_list/address_list",
+    "pages/add_address/add_address"
+  ],
+  "window": {
+    "backgroundTextStyle": "black",
+    "navigationBarBackgroundColor": "rgb(216,0, 0)",
+    "navigationBarTitleText": "华大购物",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "/imgs/ic_home_normal.png",
+        "selectedIconPath": "/imgs/ic_home_press.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/shopping_cart/shopping_cart",
+        "iconPath": "/imgs/ic_shopping_cart_normal.png",
+        "selectedIconPath": "/imgs/ic_shopping_cart_press.png",
+        "text": "购物车"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "iconPath": "/imgs/ic_mine_normal.png",
+        "selectedIconPath": "/imgs/ic_mine_press.png",
+        "text": "我的"
+      }
+    ],
+    "color": "#bfbfbf",
+    "selectedColor": "#f00",
+    "backgroundColor": "#fff",
+    "borderStyle": "red"
+  }
+}

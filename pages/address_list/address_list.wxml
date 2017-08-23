@@ -1,0 +1,16 @@
+<view class="address-list">
+  <view class="head">收货地址</view>
+  <block wx:for="{{addressList.data}}" wx:key="*this" wx:for-item="address" wx:for-index="index">
+  <view class="address-item" >
+      <view class="address-item-content" data-index="{{index}}" bindtap="onItemClick">
+          <radio class="check" value="{{index}}" checked="{{index == addressList.index}}" />
+          <view class="info">
+              <view class="top">{{address.owner}} {{address.phone}}</view>
+              <view class="bottom">{{address.provinces[address.indexs[0]]}}{{address.cities[address.indexs[1]]}}{{address.areas[address.indexs[2]]}}{{address.streets[address.indexs[3]]}}{{address.inputAddress}}</view>
+          </view>
+      </view>
+      <text class="del" wx:if="{{index != addressList.index}}" data-index="{{index}}" bindtap="delAddress">删除</text>
+  </view>
+  </block>
+</view>
+<view class="add-address" bindtap="addAddress">新增收货地址</view>
