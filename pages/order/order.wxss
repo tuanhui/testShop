@@ -1,0 +1,122 @@
+Page {
+  background-color: rgb(240, 240, 243);
+}
+.order-item {
+  margin-bottom: 20rpx;
+}
+.head {
+  display: flex;
+  height: 133rpx;
+  flex-direction: row;
+  padding: 0 25rpx 0 40rpx;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+}
+.head .head-l {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.head .head-l .item {
+  display: flex;
+  font-size: 28rpx;
+  line-height: 33rpx;
+  color: #A2A2A2;
+  margin-bottom: 12rpx;
+  flex-direction: row; 
+}
+.head .head-l .item .value.status {
+  color: #353535;
+}
+.head .head-l .item:last-child {
+  margin-bottom: 0;
+}
+.head .head-r .to-pay {
+    display: block;
+    width: 193rpx;
+    height: 70rpx;
+    color: #fff;
+    line-height: 70rpx;
+    font-size: 30rpx;
+    background: #409CE0;
+    border-radius: 9rpx;
+}
+.head .head-r .to-pay:active {
+  opacity: .7;
+}
+.head .head-r .arrow{
+ display: block;
+ width: 44rpx;
+ height: 44rpx;
+}
+.product-list {
+    margin-top: 2rpx;
+    padding: 24rpx 29rpx 0 29rpx;
+    background-color: #fff;
+    border-top: 1rpx solid rgb(240, 240, 243);
+}
+
+.product-list .product-item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 28rpx;
+}
+.product-list .product-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 28rpx;
+}
+
+.order-item:last-child .product-list .product-item:last-child  {
+  padding-bottom: 46rpx;
+}
+.product-list .product-item .pic {
+  border-radius: 8rpx;
+  width: 200rpx;
+  height: 150rpx;
+}
+.product-list .product-item .info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 36rpx;
+}
+.product-list .product-item .info .name {
+  font-size: 30rpx;
+  color: #353535;
+  line-height: 42rpx;
+  display: flex;
+  flex-direction: row;
+}
+.product-list .product-item .info .name .name-val {
+    flex: 1;
+    line-height: 42rpx;
+    height: 42rpx;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+.product-list .product-item .info .name .name-count {
+  padding-left: 10rpx;
+  line-height: 42rpx;
+  height: 42rpx;
+}
+.product-list .product-item .info .intro {
+  font-size: 26rpx;
+  color: #B2B2B2;
+  line-height: 30rpx;
+  margin-top: 4rpx;
+}
+.product-list .product-item .info .price {
+    line-height: 50rpx;
+    height: 50rpx;
+    margin-top: 10rpx;
+}
+.product-list .product-item .info .price .value {
+  font-size: 42rpx;
+  color: #409CE0;
+}
+.product-list .product-item .info .price .value::first-letter {
+  font-size: 30rpx;
+}

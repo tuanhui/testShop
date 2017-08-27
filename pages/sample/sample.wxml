@@ -1,0 +1,130 @@
+<scroll-view scroll-y="{{!chooseNativePlace}}" style="height:{{screenH-100}}px">
+    <view class="head">
+      <image class="pic" src="/imgs/pic1.jpg"></image>
+      <view class="info">
+          <view class="name">安孕可</view>
+          <view class="intro">单基因遗传病携带者筛查69种</view>
+          <view class="type">样本类型：唾液</view>
+      </view>
+    </view>
+    <view class="split-text">检测者信息</view>
+    <view class="sample-info">
+        <view class="item">
+          <view class="title">*样本编号</view>
+          <input type="text" class="value" placeholder="请输入样本编号" value="{{sampleCode}}" placeholder-style="color: #353535;" bindinput="onSampleCodeInput"/>
+          <view class="code" bindtap="getSampleCode">
+            <image class="code-pic" src="/imgs/qdcode.png"></image>
+            <text class="code-text">扫码</text>
+          </view>
+        </view>
+        <picker mode="date" value="{{sampleDate}}" start="2017-01-01" end="2047-01-01" bindchange="onSampleDateChange">
+            <view class="picker">
+                <view class="item">
+                  <view class="title">
+                      <text class="txt">*采样时间</text>
+                      <text class="notice">(年-月-日)</text>
+                  </view>
+                  <text class="value">{{sampleDate}}</text>
+                  <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                </view>
+            </view>
+        </picker>
+        <view class="item">
+          <view class="title">*姓名</view>
+          <input class="value" type="text" bindinput="onNameInput" placeholder="请输入检测者姓名" placeholder-style="color: #353535;"/>
+        </view>
+        <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+            <view class="picker">
+                <view class="item">
+                  <view class="title">*性别</view>
+                  <text class="value">{{gender ? gender : '请输入检测者性别'}}</text>
+                  <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                </view>
+            </view>
+        </picker>
+        <picker mode="date" value="{{birthDay}}" start="1900-01-01" end="2050-01-01" bindchange="onBirthDayChange">
+            <view class="picker">
+                <view class="item">
+                  <view class="title">
+                      <text class="txt">*出生日期</text>
+                      <text class="notice">(年-月-日)</text>
+                  </view>
+                  <text class="value">{{birthDate ? birthDate : '请输入检测者出生日期'}}</text>
+                  <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                </view>
+            </view>
+        </picker>
+        <view class="item">
+          <view class="title">年龄</view>
+          <text class="value">{{age}}</text>
+        </view>
+        <view class="item">
+          <view class="title">民族</view>
+          <input type="text" class="value" placeholder="请输入民族" placeholder-style="color: #353535;"/>
+          <text class="unit">族</text>
+        </view>
+        <view class="item" bindtap="selectNativePlace">
+          <view class="title">籍贯</view>
+          <text class="value">{{nativePlace ? nativePlace : '请输入籍贯(省市)'}}</text>
+          <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+        </view>
+        <view class="item">
+          <view class="title">监护人姓名</view>
+          <input class="value" type="text" placeholder="请输入检测者姓名" placeholder-style="color: #353535;" />
+        </view>
+        <view class="item">
+          <view class="title">*联系电话</view>
+          <input class="value" type="number" bindinput="onPhoneInput" placeholder="请输入手机号" placeholder-style="color: #353535;"/>
+        </view>
+        <view class="item" bindtap="chooseAddress">
+          <view class="title">
+              <text class="txt">*收件地址</text>
+              <text class="notice">(报告发放地址)</text>
+          </view>
+          <text class="value">{{address ? address : '请输入接收报告的地址'}}</text>
+          <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+        </view>
+    </view>
+    <view class="split-text">知情同意</view>
+      <view class="argument">
+        <view class="item">
+            <text class="title">查看</text>
+            <text class="text link">《单基因遗传病携带者筛查69种知情同意书》</text>
+        </view>
+        <view class="item" bindtap="checkProtocol_1">
+            <image class="checkbox" src="/imgs/checkbox_{{protocol_1 ? 'checked' : 'normal'}}.png"></image>
+            <text class="text">我同意捐赠剩余样本和检测数据（可选）</text>
+        </view>
+        <view class="item" bindtap="checkProtocol_2">
+          <image class="checkbox" src="/imgs/checkbox_{{protocol_2 ? 'checked' : 'normal'}}.png"></image>
+            <text class="text">我同意进行单基因遗传病携带者筛查69种</text>
+        </view>
+    </view>
+    <view class="commit-container">
+      <button class="check-btn" bindtap="checkInput">提交</button>
+    </view>
+</scroll-view>
+<view wx:if="{{chooseNativePlace}}">
+    <view class="set-value">
+        <!--籍贯选择 -->
+        <view class="pick address-pick">
+            <picker-view 
+              indicator-style="height: 50px;color: rgb(105, 168, 248);" 
+              style="width: 100%; height: 150px;line-height:50px;" 
+              value="{{value}}" 
+              bindchange="bindChange">
+              <picker-view-column>
+                <view wx:for="{{provinces}}" wx:key="*this" style="line-height: 50px;">{{item}}</view>
+              </picker-view-column>
+              <picker-view-column>
+                <view wx:for="{{cities}}" wx:key="*this" style="line-height: 50px;">{{item}}</view>
+              </picker-view-column>
+            </picker-view>
+            <view class="operate">
+                <view class="btn-cancel" bindtap="hideDialog">取消</view>
+                <view class="btn-confirm" bindtap="confirmVal">确定</view>
+            </view>
+        </view>
+    </view>
+    <view class="cover" bindtap="hideDialog"></view>
+</view>

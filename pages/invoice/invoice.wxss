@@ -1,0 +1,89 @@
+Page {
+  background-color: rgb(240, 240, 243);
+}
+.head {
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+ padding: 29rpx 0 29rpx 21rpx;
+}
+.head .item {
+  display: flex;
+  margin-right: 42rpx;
+  flex-direction: row;
+}
+.head .item .check {
+  display: inline-block;
+  width: 44rpx;
+  height: 44rpx;
+}
+.head .item .text {
+  font-size: 28rpx;
+  margin-left: 10rpx;
+  color: #353535;
+  line-height: 44rpx;
+}
+.dispatching {
+  padding: 38rpx 28rpx 34rpx 40rpx;
+  margin-top: 18rpx;
+  background-color: #fff;
+}
+.dispatching .item {
+  display: flex;
+  flex-direction: row;
+  height: 33rpx;
+  line-height: 33rpx;
+}
+.dispatching .item.bottom {
+  margin-top: 12rpx;
+}
+.dispatching .item .name {
+  flex: 1;
+  color: #353535;
+  font-size: 28rpx;
+}
+.dispatching .item.bottom .name {
+   color: #A2A2A2;
+}
+.dispatching .item .value {
+  font-size: 28rpx;
+  color: #A2A2A2;
+}
+.company .item{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 120rpx;
+  font-size: 28rpx;
+  padding-left: 25rpx;
+  border-top: 1rpx solid rgb(240, 240, 243);
+  background-color: #fff;
+}
+.company .item .name {
+  width: 121rpx;
+  display: inline-block;
+  text-align: right;
+}
+.company .item .value {
+  margin-left: 47rpx;
+  color: #A2A2A2;
+}
+.holder-value {
+  color: #A2A2A2;
+}
+.confirm {
+  height: 146rpx;
+  background-color: #fff;
+  margin-top: 1rpx;
+  padding: 67rpx 25rpx 0 25rpx;
+}
+.confirm .btn {
+  background: #409CE0;
+  border-radius: 9rpx;
+  color: #fff;
+  font-size: 30rpx;
+}
+.confirm .btn:active {
+  opacity: .7;
+}

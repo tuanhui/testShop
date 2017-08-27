@@ -1,0 +1,39 @@
+.title {
+    font-size: 30rpx;
+    color: #353535;
+    text-align: center;
+    height: 154rpx;
+    line-height: 154rpx;
+}
+.list {
+  padding: 0 28rpx;
+}
+.list .item {
+  display: flex;
+  flex-direction: row;
+  font-size: 26rpx;
+  height: 26rpx;
+  line-height: 26rpx;
+  color: #A2A2A2;
+  margin-top: 30rpx;
+}
+.list .item:first-child {
+  margin-top: 0;
+}
+.list .item .name {
+  flex: 1;
+}
+
+.confirm-btn {
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background: #409CE0;
+  margin: 98rpx 25rpx;
+  border-radius: 9rpx;
+  font-size: 30rpx;
+  color: #FFFFFF;
+}
+.confirm-btn:active {
+  opacity: .7;
+}

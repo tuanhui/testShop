@@ -1,0 +1,61 @@
+<!--
+sampleCode: '',//样品编号
+sampleDate: '',//采样日期
+username: '',//姓名
+gender: '',//性别
+birthDate: '',//出生日期
+age: '',//年龄
+nation: '',//民族
+nativePlace: '',//籍贯
+guardianship: '',//监护人,如果选择产品为SD0126，则为必填
+phone: '',//联系电话
+address: '',//收货地址
+-->
+<view class="title">请确认以下信息是否正确</view>
+<view class="list">
+    <view class="item">
+      <text class="name">样品编号</text>
+      <text class="value">{{sampleCode}}</text>
+    </view>
+    <view class="item">
+      <text class="name">采样日期</text>
+      <text class="value">{{sampleDate}}</text>
+    </view>
+    <view class="item">
+      <text class="name">姓名</text>
+      <text class="value">{{username}}</text>
+    </view>
+    <view class="item">
+      <text class="name">性别</text>
+      <text class="value">{{gender}}</text>
+    </view>
+    <view class="item">
+      <text class="name">出生日期</text>
+      <text class="value">{{birthDate}}</text>
+    </view>
+    <view class="item">
+      <text class="name">年龄</text>
+      <text class="value">{{age}}</text>
+    </view>
+    <view class="item" wx:if="{{nation}}">
+      <text class="name">民族</text>
+      <text class="value">{{nation}}</text>
+    </view>
+    <view class="item" wx:if="{{nativePlace}}">
+      <text class="name">籍贯</text>
+      <text class="value">{{nativePlace}}</text>
+    </view>
+    <view class="item" wx:if="{{guardianship}}">
+      <text class="name">监护人</text>
+      <text class="value">{{guardianship}}</text>
+    </view>
+    <view class="item">
+      <text class="name">联系电话</text>
+      <text class="value">{{phone}}</text>
+    </view>
+    <view class="item">
+      <text class="name">收货地址</text>
+      <text class="value">{{address}}</text>
+    </view>
+</view>
+<button class="confirm-btn" bindtap="confirm">绑定信息</button>

@@ -1,0 +1,3 @@
+<image class="icon" src="/imgs/ic_error.png"></image>
+<view class="title">操作失败</view>
+<view class="hint">此处提示异常信息</view>

@@ -9,25 +9,65 @@ Page({
     checkAll: false,
     totalCount: 0,
     totalPrice: 0,
+    totalFreight: 0
   },
+  
   onLoad: function (options) {
     console.log('onload');
-    var list = app.carts;
-    console.dir(list);
-    var totalPrice = 0;
-    for (var i = 0; i < list.length; i++) {
-      var item = list[i];
-      if (item.checked) {
-        totalPrice += item.price;
+    
+  },
+  onInput: function (e) {
+    var value = e.detail.value;
+    value = parseInt(value);
+    var index = e.currentTarget.dataset.position;
+    index = parseInt(index);
+    if (!value || isNaN(value) || typeof value !== 'number') {
+      value = 1;
+    }
+    if ((value + "").length > 3) {
+      value = parseInt((value + "").substring(0, 3));
+    }
+    var cart = this.data.cartList[index];
+    if (!cart) {
+      return;
+    }
+    cart.count = value;
+    var cartsPrice = 0;
+    var datas = this.data.cartList;
+    if (datas) {
+      for (var i = 0; i < datas.length; i++) {
+        var item = datas[i];
+        if (item.checked) {
+          cartsPrice += parseFloat(item.price) * parseInt(item.count);
+        }
       }
     }
+    var totalPrice = cartsPrice + this.data.totalFreight;
     this.setData({
-      cartList: list,
-      totalPrice: totalPrice.toFixed(2)
+      cartList: this.data.cartList,
+      cartsPrice: cartsPrice.toFixed(2),
+      totalPrice: totalPrice.toFixed(2),
     })
   },
   onShow: function () {
     console.log('onshow');
+    app.getCarts(function (carts) {
+      var totalPrice = 0;
+      var totalCount = 0;
+      for (var i = 0; i < carts.length; i++) {
+        var item = carts[i];
+        if (item.checked) {
+          totalPrice += parseFloat(item.price) * parseInt(item.count);
+          totalCount += 1;
+        }
+      }
+      this.setData({
+        cartList: carts,
+        totalPrice: totalPrice.toFixed(2),
+        totalCount: totalCount,
+        checkAll: totalCount > 0 && totalCount === carts.length
+      })
+    }.bind(this));
   },
   changeCheck: function(e){
     var position = e.currentTarget.dataset.position;
@@ -53,7 +93,7 @@ Page({
       cartList: this.data.cartList,
       totalPrice: totalPrice.toFixed(2),
       totalCount: totalCount,
-      checkAll: totalCount > 0,
+      checkAll: totalCount > 0 && totalCount === this.data.cartList.length,
     })
   },
   minus: function(e){
@@ -157,7 +197,13 @@ Page({
     this.startY = undefined;
     this.target = null;
   },
-  delItem: function(e) {
+  delCarts: function(e) {
+    if (this.data.totalCount === 0) {
+      wx.showToast({
+        title: '未选中要删除的产品',
+      })
+      return
+    }
     var that = this;
     wx.showModal({
       content: '是否确认删除此商品？',
@@ -168,41 +214,51 @@ Page({
           wx.showLoading({
             title: '正在删除...',
           });
-          var position = e.currentTarget.dataset.position;
-          console.log('del item ' + position);
-          if (typeof position === 'number' && position < that.data.cartList.length) {
-            var delArrays = that.data.cartList.splice(position, 1);
-            if (!delArrays || delArrays.length === 0) {
-              wx.hideLoading();
-              return;
-            }
-            var item = delArrays[0];
-            console.dir(item);
-            var totalCount = parseInt(that.data.totalCount);
-            var totalPrice = parseFloat(that.data.totalPrice);
-            if(item.checked) {
-              totalCount -= 1;
-              totalPrice -= parseFloat(item.price) * parseInt(item.count);
-            }
-            app.delCart(item.productId,function(){
-              wx.hideLoading();
-              that.setData({
-                cartList: that.data.cartList,
-                totalPrice: totalPrice.toFixed(2),
-                totalCount: totalCount,
-                checkAll: (that.data.cartList == null || that.data.cartList.length == 0) ? false : that.data.checkAll
-              })
-            })
+          var carts = [];
+          if(that.data.checkAll) {
+            carts = that.data.cartList;
+          } else {
+              for (var i = 0; i < that.data.cartList.length; i++) {
+                var tmpCart = that.data.cartList[i];
+                if (tmpCart.checked) {
+                  carts.push(tmpCart);
+                }
+              }
           }
+          app.delCarts(that.data.cartList, function () {
+            app.getCarts(function(carts){
+              console.dir(carts);
+              wx.hideLoading();
+              if (carts) {
+                  var totalCount = 0;
+                  var totalPrice = 0;
+                  var totalFreight = 0;
+                  for(var i=0; i<carts.length; i++) {
+                    var cart = carts[i];
+                    if(cart.checked) {
+                      totalCount += 1;
+                      totalPrice += parseInt(cart.count) * parseFloat(cart.price);
+                    }
+                  }
+                  that.setData({
+                    cartList: carts,
+                    totalPrice: totalPrice,
+                    totalCount: totalCount,
+                    checkAll: totalCount > 0 && totalCount === carts.length
+                  })
+              }
+            })
+          })
         }
       }
     });
   },
-  settlement: function(){
-    //结算
-    console.log("结算");
+  /**
+   * 提交
+   */
+  toPay: function(){
     var carts = [];
-    for (var i = 0; i < this.data.cartList.length; i++){
+    for (var i = 0; i < this.data.cartList.length; i++) {
       var tmpCart = this.data.cartList[i];
       if (tmpCart.checked) {
         carts.push(tmpCart);

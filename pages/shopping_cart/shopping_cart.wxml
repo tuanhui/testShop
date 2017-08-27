@@ -1,6 +1,19 @@
+<view class="head-tool">
+    <image src="/imgs/ic_check_{{checkAll ? 'checked' : 'normal'}}.png" 
+           class="icon check" 
+           mode="aspectFit"
+           bindtap="{{cartList && cartList.length > 0 ? 'doCheckAll' : ''}}">
+    </image>
+    <text class="text">全选</text>
+    <image src="/imgs/ic_delete.png" 
+            class="icon delete" 
+            mode="aspectFit"
+            bindtap="{{cartList && cartList.length > 0 ? 'delCarts' : ''}}">
+    </image>
+</view>
 <view class="cart-list" id="parent" >
     <block wx:for="{{cartList}}" 
-          wx:key="*this" 
+          wx:key="id" 
           wx:for-item="cart"
           wx:for-index="index">
     <view class="cart-item"
@@ -10,35 +23,34 @@
           bindtouchstart="onTouchStart" 
           bindtouchcancel="onTouchCancel" 
           bindtouchend="onTouchEnd">
-      <view class="item-detail">
-          <radio class="check" data-position="{{index}}" value="{{index}}" checked="{{cart.checked}}" bindtap="changeCheck"/> 
-          <image class="pic" src="/imgs/pic.png"></image>
+      <image class="check" 
+                 data-position="{{index}}" 
+                 value="{{index}}" 
+                 bindtap="changeCheck" 
+                 src="/imgs/ic_check_{{cart.checked ? 'checked' : 'normal'}}.png"/> 
+          <image class="pic" src="{{cart.img}}"></image>
           <view class="info">
-              <view class="name">{{cart.productName}}</view>
-              <view class="price">￥{{cart.price}}</view>
+              <view class="name">{{cart.name}}</view>
+              <view class="intro">{{cart.intro}}</view>
+              <view class="price">
+                  <view class="real">￥{{cart.price}}</view>
+                  <view class="prev">
+                      <view class="title">原价</view>
+                      <view class="value">￥{{cart.original_price}}</view>
+                  </view>
+              </view>
               <view class="count-container">
                 <view class="count-item minus {{cart.count == 1 ? 'disable' : ''}}" 
                       data-position="{{index}}" bindtap="{{cart.count == 1 ? '' : 'minus'}}">-</view>
-                <input type="number" class="count-item count" value="{{cart.count}}" />
-                <view class="count-item plus"
-                     data-position="{{index}}" bindtap="plus">+</view>
+                <input data-position="{{index}}" type="number" class="count-item count" value="{{cart.count}}" bindinput="onInput"/>
+                <view class="count-item plus" data-position="{{index}}" bindtap="plus">+</view>
               </view>
           </view>
-      </view>
-      <view class="item-del" data-position="{{index}}" bindtap="delItem">
-        删除
-      </view>
     </view>
     </block>
 </view>
 <view class="tool-bar">
-    <view class="check-item" bindtap="{{(cartList == null || cartList.length == 0) ? '' : 'doCheckAll'}}">
-        <radio class="check-item-radio" value="0" checked="{{checkAll}}" disabled="{{cartList == null || cartList.length == 0}}"/>
-        <text class="check-item-value">全选</text>
-    </view>
-    <view class="settlement {{totalCount == 0 ? 'disable' : ''}}" bindtap="{{totalCount == 0 ? '' : 'settlement'}}">去结算<text class="settlement-value">({{totalCount< 100 ? totalCount : '99+'}}件)</text></view>
-    <view class="compute-item">
-        <view class="total">总计: <text class="total-value">￥{{totalPrice}}</text></view>
-        <text class="freight">不含运费</text>
-    </view>
+    <view class="price-name">共计</view>
+    <view class="price-value">￥{{totalPrice}}</view>
+    <button class="btn-pay {{totalPrice == 0 ? 'disable' : ''}}" bindtap="{{totalPrice == 0 ? '' : 'toPay'}}">去支付</button>
 </view>

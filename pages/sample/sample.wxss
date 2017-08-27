@@ -1,0 +1,248 @@
+  Page {
+  background-color: #fff;
+}
+.head {
+  display: flex;
+  flex-direction: row;
+  padding: 23rpx 0 26rpx 21rpx;
+}
+.head .pic {
+  width: 192rpx;
+  height: 146rpx;
+}
+.head .info {
+  margin-left: 42rpx;
+  flex: 1;
+  height: 146rpx;
+}
+.head .info .name {
+  font-size: 42rpx;
+  height: 42rpx;
+  line-height: 42rpx;
+  margin-top: 8rpx;
+}
+.head .info .intro,
+.head .info .type {
+  height: 28rpx;
+  line-height: 28rpx;
+  font-size: 28rpx;
+  color: #B2B2B2;
+}
+.head .info .intro {
+  margin-top: 24rpx;
+}
+.head .info .type {
+  margin-top: 12rpx;
+}
+.split-text {
+  height: 75rpx;
+  line-height: 75rpx;
+  color: #A2A2A2;
+  background-color: rgb(240, 240, 243);
+  padding-left: 21rpx;
+  font-size: 28rpx;
+}
+.sample-info .item {
+  display: flex;
+  flex-direction: row;
+  padding-left: 21rpx;
+  padding-right: 20rpx;
+  height: 120rpx;
+  box-sizing: border-box;
+  line-height: 120rpx;
+  position: relative;
+  z-index: 999;
+  border-bottom: 1px solid #E2E2E2;
+} 
+.picker{
+  border-bottom: 1px solid #E2E2E2;
+}
+.sample-info .item:last-child {
+  border-bottom: 0;
+}
+.sample-info .item .title {
+    font-size: 28rpx;
+    display: flex;
+    min-width: 160rpx;
+    justify-content: center;
+    flex-direction: column;
+}
+.sample-info .item .choose-province,
+.sample-info .item .choose-city {
+    font-size: 28rpx;
+    position: relative;
+    height: 28rpx;
+    color: #353535;
+    opacity: 0.5; 
+}
+.sample-info .item .choose-city {
+  margin-left: 20rpx;
+}
+.sample-info .item .unit {
+  font-size: 28rpx;
+}
+.sample-info .item .unit {
+  margin-right: 20rpx;
+}
+.sample-info .item .title .txt,
+.sample-info .item .title .notice {
+  height: 28rpx;
+  line-height: 28rpx;
+}
+.sample-info .item .title .notice {
+  color: #353535;
+  opacity: 0.5;
+  font-size: 24rpx;
+  margin-top: 6rpx;
+}
+.sample-info .item .value {
+  flex: 1;
+  font-size: 28rpx;
+  margin-left: 47rpx;
+  color: #353535;
+  opacity: 0.5;
+  height: 28rpx;
+  line-height: 120rpx;
+}
+.sample-info .item input.value {
+  margin: auto 0 auto 47rpx;
+}
+.sample-info .item .code {
+  display: flex;
+  margin: auto 20rpx;
+  flex-direction: column;
+  text-align: center;
+}
+.sample-info .item .code .code-text {
+  opacity: 0.5;
+  font-size: 22rpx;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #353535;
+  height: 22rpx;
+  line-height: 22rpx;
+}
+.sample-info .item .code .code-pic {
+  width: 52rpx;
+  margin: 0 auto;
+  height: 52rpx;
+}
+.argument {
+  text-align: center;
+  padding-left: 34rpx;
+}
+.argument .item {
+  display: inline-block;
+  height: 100rpx;
+  line-height: 100rpx;
+  width: 670rpx;
+  text-align: left;
+}
+.argument .item .checkbox {
+  width: 44rpx;
+  height: 44rpx;
+  vertical-align: middle;
+}
+.argument .item .title,
+.argument .item .text {
+  font-size: 30rpx;
+  height: 30rpx;
+  line-height: 30rpx;
+  color: #353535;
+  margin-left: 21rpx;
+}
+.argument .item .title,
+.argument .item .text.link {
+    color: #409CE0;
+    position: relative;
+    margin-left: 0;
+}
+.argument .item .title::after {
+  position: absolute;
+  content: '';
+  bottom: -3px;
+  left: 0;
+  height: 2px;
+  width: 60rpx;
+  background-color: #409CE0;
+}
+.commit-container {
+  height: 242rpx;
+  line-height: 242rpx;
+  border-top: 21rpx solid rgb(240, 240, 243);
+  text-align: center;
+}
+.commit-container .check-btn {
+  display: block;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin: 81rpx 24rpx;
+  background-color: #409CE0;
+  color: #fff;
+}
+.commit-container .check-btn:active {
+  opacity: .8;
+}
+
+/*籍贯选择框 */
+.cover {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  opacity: .6;
+  background-color: #000;
+}
+ .set-value {
+    left: 20rpx;
+    right: 20rpx;
+    bottom: 20rpx;
+    position: absolute;
+    text-align: center;
+    background-color: rgb(247, 247, 247);
+    border-color: #ddd;
+    border-width: 1rpx;
+    border-style: solid;
+    border-radius: 8rpx;
+    transition: all 1s linear;
+    z-index: 9999;
+  }  
+  .set-value .operate {
+    height: 100rpx;
+    position: relative;
+    border-top-color: rgb(224, 224, 224);
+    border-top-style: solid;
+    border-top-width: 1rpx;
+  }
+  .set-value .operate .btn-cancel,
+  .set-value .operate .btn-confirm {
+      height: 100rpx;
+      width: 50%;
+      line-height: 100rpx;
+      text-align: center;
+      bottom: 0;
+      box-sizing: border-box;
+      vertical-align: bottom;
+      position: absolute;
+      right: 0;
+  }
+  .set-value .operate .btn-cancel:active,
+  .set-value .operate .btn-confirm:active {
+      background-color: rgb(224, 224, 224);
+  }
+  .set-value .operate .btn-cancel {
+    left: 0;
+    border-right-color: rgb(224, 224, 224);
+    border-right-style: solid;
+    border-right-width: 1rpx;
+    color: rgb(152, 152, 152);
+  }
+  .set-value .operate .btn-confirm {
+      color: rgb(105, 168, 248)
+  }
+  .pick {
+    background-color: white;
+  }

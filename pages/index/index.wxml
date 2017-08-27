@@ -1,25 +1,36 @@
+<swiper wx:if="{{false}}"
+    indicator-dots="{{indicatorDots}}"
+    autoplay="{{autoplay}}" 
+    interval="{{interval}}" 
+    duration="{{duration}}"
+    circular="{{true}}">
+    <block wx:for="{{product.imgUrls}}">
+      <swiper-item>
+        <view class="slide-image" style=" background-image: url({{item}})"/>
+      </swiper-item>
+    </block>
+</swiper>
 <view class="container">
     <view class="product_list">
-        <block wx:key="*this" wx:for="{{productList}}" wx:for-item="product">
+        <block wx:key="*this" 
+               wx:for="{{productList}}" 
+               wx:for-item="product">
             <view class="item" 
-            data-product-id="{{product.id}}" 
-            data-product-code="{{product.code}}" 
-            data-product-name="{{product.name}}"
-            data-product-img="{{product.img}}"  
-            data-price="{{product.price}}"
-            bindtap="toDetail">
+                  data-id="{{product.id}}" 
+                  bindtap="toDetail">
                 <image class="item-l pic" src="{{product.img}}"></image>
                 <view class="item-r">
                     <view class="name">{{product.name}}</view>
+                    <view class="intro">{{product.intro}}</view>
                     <view class="price">
                         <view class="real">￥{{product.price}}</view>
-                        <view class="original" wx:if="{{product.originalPrice}}">￥{{product.originalPrice}}</view>
-                    </view>
-                    <view class="inventory" wx:if="{{product.inventory}}">
-                    库存：{{product.inventory}}
+                        <view class="original" wx:if="{{product.original_price}}">
+                            <text class="name">原价</text>
+                            <text class="value">￥{{product.original_price}}</text>
+                        </view>
                     </view>
                     <button class="btn buy">
-                      立即购买
+                      购买
                     </button>
                 </view>
             </view>

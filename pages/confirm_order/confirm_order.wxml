@@ -1,27 +1,16 @@
-<view class="address">
-    <view class="add-address" wx:if="{{! address}}" bindtap="toAddAddress">
-        <view class="icon">＋</view>
-        <view class="text">新增收货地址</view>
-        <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
-    </view>
-    <view class="address-info" bindtap="toAddressList" wx:if="{{address}}">
-      <view class="owner">{{address.owner}} {{address.phone}}</view>
-      <view class="text">{{addressInfo}}</view>
-      <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
-    </view>
-</view>
 <view class="product-list">
     <block wx:for="{{carts}}" wx:for-item="cart" wx:key="*this">
         <view class="product">
-          <image class="pic" src="{{cart.productImg}}"></image>
+          <image class="pic" src="{{cart.img}}"></image>
           <view class="info">
-              <view class="title">{{cart.productName}}</view>
+              <view class="title">{{cart.name}} x{{cart.count}}</view>
+              <view class="intro">{{cart.intro}}</view>
               <view class="price-count">
                   <view class="price">￥{{cart.price}}</view>
-                  <view class="count" wx:if="{{isFromCart}}">x{{cart.count}}</view>
+                  <view class="count" wx:if="{{isFromCart}}"></view>
                   <view class="count-container" wx:if="{{!isFromCart}}">
                       <view class="count-item minus {{cart.count == 1 ? 'disable' : ''}}" 
-                      bindtap="{{cart.count == 1 ? '' : 'minus'}}">-</view>
+                      bindtap="{{cart.count == 1 ? '' : 'minus'}}">－</view>
                       <input type="number" bindinput="onInput" class="count-item count" value="{{cart.count}}" />
                       <view class="count-item plus" bindtap="plus">+</view>
                     </view>
@@ -30,23 +19,61 @@
         </view>
     </block>
     <view class="dispatching">
-      <text class="pattern-key">配送方式</text>
-      <text class="pattern-value">快递（免运费）</text>
+      <view class="left">
+          <text class="name">配送方式</text>
+          <text class="type">小件</text>
+      </view>
+      <view class="right">顺丰快递 ({{totalFreight === 0 ? '免运费' : '￥'+totalFreight}})</view>
     </view>
 </view>
-
+<view class="expressage">
+    <view class="item">
+        <text class="name">* 收件人</text>
+        <input type="text" 
+               bindinput="onOwnerInput" 
+               class="value" 
+               placeholder="请输入收件人姓名" 
+               placeholder-class="value-holder"/>
+    </view>
+    <view class="item">
+        <text class="name">* 联系电话</text>
+        <input type="number" 
+               class="value" 
+               placeholder="请输入联系电话" 
+               placeholder-class="value-holder" 
+               bindinput="onPhoneInput"/>
+    </view>
+    <view class="item" bindtap="chooseAddress">
+        <text class="name">* 收件地址</text>
+        <text class="value">{{address ? address : '请输入收件地址'}}</text>
+        <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+    </view>
+    <view class="item">
+        <text class="name hint">备注</text>
+        <input type="text" class="value" placeholder="请输入物流备注信息" placeholder-class="value-holder"/>
+    </view>
+    <view class="other" wx:if="{{showOther}}" bindtap="showHint">
+        <text class="value">补充选填信息</text>
+        <text class="arrow-bottom"></text>
+    </view>
+    <view class="item extend" wx:if="{{showHint}}" bindtap="setInvoice">
+        <text class="name hint">发票</text>
+        <text class="value hint">{{invoice ? invoice : '不需要'}}</text>
+        <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+    </view>
+</view>
 <view class="accounts">
     <view class="item">
         <text class="name">商品金额</text>
         <text class="value">￥{{cartsPrice}}</text>
     </view>
     <view class="item">
-        <text class="name">运费</text>
-        <text class="value">+￥{{totalFreight}}</text>
+        <text class="name">优惠</text>
+        <text class="value">-￥{{cartsPrice - totalPrice}}</text>
     </view>
     <view class="total">
       <text class="name">实付金额：</text>
       <text class="value">￥{{totalPrice}}</text>
     </view>
-    <button class="comit-btn weui-btn" type="primary">微信支付</button>
+    <button class="comit-btn" bindtap="toBuy">微信支付</button>
 </view>

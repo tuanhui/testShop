@@ -1,0 +1,33 @@
+<view class="head">
+    <view class="item">
+      <image bindtap="changeOwner" class="check" src="/imgs/ic_check_{{isOwner ? 'checked' : 'normal'}}.png"></image>
+      <text class="text">个人发票</text>
+    </view>
+    <view class="item">
+      <image bindtap="changeCompany" class="check" src="/imgs/ic_check_{{isCompany ? 'checked' : 'normal'}}.png"></image>
+      <text class="text">企业发票</text>
+    </view>
+</view>
+<view class="dispatching">
+    <view class="item">
+        <text class="name">配送方式</text>
+        <text class="value">随检测报告邮递</text>
+    </view>
+    <view class="item bottom">
+        <text class="name">普通纸质发票</text>
+        <text class="value">送货时间：等待检测结束</text>
+    </view>
+</view>
+<view class="company" wx:if="{{isCompany}}">
+    <view class="item">
+        <text class="name">单位名称</text>
+        <input type="text" class="value" value="{{company ? company : ''}}" bindinput="onCompanyInput" placeholder="请填写单位名称" placeholder-class="holder-value"/>
+    </view>
+    <view class="item">
+        <text class="name">纳税人识别号</text>
+        <input type="text" class="value" value="{{identify ? identify : ''}}" bindinput="onIdentifyInput" placeholder="填写纳税人识别号" placeholder-class="holder-value"/>
+    </view>
+</view>
+<view class="confirm">
+    <button class="btn" bindtap="confirm">确定</button>
+</view>

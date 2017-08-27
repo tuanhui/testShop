@@ -2,16 +2,23 @@
   "pages": [
     "pages/index/index",
     "pages/shopping_cart/shopping_cart",
-    "pages/mine/mine",
+    "pages/order/order",
     "pages/detail/detail",
     "pages/confirm_order/confirm_order",
     "pages/address_list/address_list",
-    "pages/add_address/add_address"
+    "pages/add_address/add_address",
+    "pages/sample/sample",
+    "pages/sample_confirm/sample_confirm",
+    "pages/invoice/invoice",
+    "pages/buy_success/buy_success",
+    "pages/sample_success/sample_success",
+    "pages/error/error",
+    "pages/order_detail/order_detail"
   ],
   "window": {
     "backgroundTextStyle": "black",
-    "navigationBarBackgroundColor": "rgb(216,0, 0)",
-    "navigationBarTitleText": "华大购物",
+    "navigationBarBackgroundColor": "#409CE0",
+    "navigationBarTitleText": "华大基因 | 优康门诊",
     "navigationBarTextStyle": "white"
   },
   "tabBar": {
@@ -29,15 +36,15 @@
         "text": "购物车"
       },
       {
-        "pagePath": "pages/mine/mine",
+        "pagePath": "pages/order/order",
         "iconPath": "/imgs/ic_mine_normal.png",
         "selectedIconPath": "/imgs/ic_mine_press.png",
-        "text": "我的"
+        "text": "订单"
       }
     ],
-    "color": "#bfbfbf",
-    "selectedColor": "#f00",
+    "color": "#B9B9B9",
+    "selectedColor": "#409CE0",
     "backgroundColor": "#fff",
-    "borderStyle": "red"
+    "borderStyle": "#ccc"
   }
 }
