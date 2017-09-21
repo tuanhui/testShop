@@ -3,27 +3,27 @@
         <view class="head-l">
             <view class="item">
                 <text class="name">状态：</text>
-                <text class="value status">{{order.order_type == 1 ? '待发货' : (order.order_type == 2 ? '已发货' : '已签收')}}</text>
+                <text class="value status">{{order.orderStatus == 1 ? '待发货' : (order.orderStatus == 2 ? '已发货' : '已签收')}}</text>
             </view>
             <view class="item">
                 <text class="name">订单：</text>
-                <text class="value">{{order.order_number}}</text>
+                <text class="value">{{order.orderId}}</text>
             </view>
         </view>
     </view>
     <view class="product-list">
-        <block wx:key="*this" wx:for="{{order.products}}" wx:for-item="product">
+        <block wx:key="*this" wx:for="{{order.items}}" wx:for-item="product">
             <view class="product-item">
-                <image class="pic" src="{{product.img}}"></image>
+                <image class="pic" src="{{product.itemImg}}"></image>
                 <view class="info">
                     <view class="name">
-                        <view class="name-val">{{product.name}}</view>
+                        <view class="name-val">{{product.itemName}}</view>
                         <view class="name-count">x{{product.count}}</view>
                     </view>
-                    <view class="intro">{{product.intro}}</view>
+                    <view class="intro">{{product.itemIntro}}</view>
                     <view class="price">
                       <view class="name"></view>
-                      <view class="value">￥{{product.price}}</view> 
+                      <view class="value">￥{{product.itemPrice}}</view> 
                     </view>
                 </view>
             </view>
@@ -32,15 +32,15 @@
     <view class="row-distribution">
         <view class="item">
             <view class="name">配送方式：</view>
-            <view class="value">{{order.distribution}}({{order.total_freight === 0 ? '免运费' : order.total_freight}})</view>
+            <view class="value">{{order.orderDistribution}}({{order.orderFreight == 0 ? '免运费' : order.orderFreight}})</view>
         </view>
         <view class="item">
             <view class="name">收货地址：</view>
-            <view class="value">{{order.address}}</view>
+            <view class="value">{{order.ownerAddr}}</view>
         </view>
         <view class="item">
             <view class="name">收货人：</view>
-            <view class="value">{{order.owner}} {{order.phone}}</view>
+            <view class="value">{{order.orderOwner}} {{order.ownerPhone}}</view>
         </view>
         <view class="item">
             <view class="name">发票信息：</view>
@@ -50,15 +50,15 @@
     <view class="row-price">
         <view class="item">
             <view class="name">商品总额</view>
-            <view class="value">￥{{order.cart_price}}</view>
+            <view class="value">￥{{order.orderTotalPrice}}</view>
         </view>
         <view class="item">
             <view class="name">优惠</view>
-            <view class="value">-￥{{order.total_preferential}}</view>
+            <view class="value">-￥{{discountsPrice}}</view>
         </view>
     </view>
      <view class="row-total">
         <view class="name">实际支付</view>
-        <view class="value">￥{{order.total_price}}</view>
+        <view class="value">￥{{order.orderTotalPayment}}</view>
       </view>
 </view>

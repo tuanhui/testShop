@@ -1,4 +1,4 @@
-  Page {
+Page {
   background-color: #fff;
 }
 .head {
@@ -16,23 +16,23 @@
   height: 146rpx;
 }
 .head .info .name {
-  font-size: 42rpx;
+  font-size: 32rpx;
   height: 42rpx;
+  margin-top: 9rpx;
   line-height: 42rpx;
-  margin-top: 8rpx;
 }
 .head .info .intro,
 .head .info .type {
-  height: 28rpx;
-  line-height: 28rpx;
-  font-size: 28rpx;
+  height: 33rpx;
+  line-height: 33rpx;
+  font-size: 26rpx;
   color: #B2B2B2;
 }
 .head .info .intro {
-  margin-top: 24rpx;
+  margin-top: 12rpx;
 }
 .head .info .type {
-  margin-top: 12rpx;
+  margin-top: 6rpx;
 }
 .split-text {
   height: 75rpx;
@@ -42,6 +42,8 @@
   padding-left: 21rpx;
   font-size: 28rpx;
 }
+.product-item,
+.clinic .item,
 .sample-info .item {
   display: flex;
   flex-direction: row;
@@ -54,19 +56,27 @@
   z-index: 999;
   border-bottom: 1px solid #E2E2E2;
 } 
-.picker{
+.sample-info .picker{
   border-bottom: 1px solid #E2E2E2;
 }
+.product-item,
 .sample-info .item:last-child {
   border-bottom: 0;
 }
+.product-item .title,
+.clinic .item .title,
 .sample-info .item .title {
     font-size: 28rpx;
     display: flex;
-    min-width: 160rpx;
+    width: 130rpx;
+    text-align: right;
     justify-content: center;
     flex-direction: column;
 }
+.clinic .item .title {
+  width: 162rpx;
+}
+
 .sample-info .item .choose-province,
 .sample-info .item .choose-city {
     font-size: 28rpx;
@@ -95,6 +105,9 @@
   font-size: 24rpx;
   margin-top: 6rpx;
 }
+
+.product-item .value,
+.clinic .item .value,
 .sample-info .item .value {
   flex: 1;
   font-size: 28rpx;
@@ -246,3 +259,60 @@
   .pick {
     background-color: white;
   }
+
+  /*临床信息 */
+.clinic .item .title {
+  line-height: 33rpx;
+} 
+.clinic .item.checkbox .value {
+  opacity: 1;
+}
+.clinic .item input.value {
+  margin: auto 0 auto 47rpx;
+}
+.clinic .item .title .txt,
+.clinic .item .title .notice {
+  height: 28rpx;
+  line-height: 28rpx;
+}
+.clinic .item .title .notice {
+  color: #353535;
+  opacity: 0.5;
+  font-size: 24rpx;
+  margin-top: 6rpx;
+}
+.clinic .item .value .value-left,
+.clinic .item .value .value-right {
+  display: inline-block;
+}
+.clinic .item .value .value-right {
+  margin-left: 125rpx;
+}
+.clinic .item .icon.check {
+  width: 44rpx;
+  height: 44rpx;
+  margin-top: -2rpx;
+  vertical-align: middle;
+}
+
+.clinic .item .value text {
+  opacity: .5;
+  margin-left: 4rpx;
+}
+
+/*重新加载  */
+.reload {
+  display: block;
+  width: 300rpx;
+  height: 82rpx;
+  color: #939393;
+  border: 2rpx solid #D1D1D1;
+  border-radius: 10rpx;
+  line-height: 82rpx;
+  text-align: center;
+  font-size: 36rpx;
+  margin: 200rpx auto;
+}
+.reload:active {
+  opacity: .7;
+}

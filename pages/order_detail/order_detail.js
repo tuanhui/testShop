@@ -1,8 +1,11 @@
+var config = require('../../utils/config.js');
 Page({
   /**
    * 页面的初始数据
    */
   data: {
+    orderId: '',
+    discountsPrice: 0,
     order: {},
   },
   /**
@@ -10,105 +13,42 @@ Page({
    */
   onLoad: function (options) {
     this.setData({
-      order: {
-        "order_number": "DD3291839321",
-        "order_type": 1,
-        "invoice": {
-          "type": 0,//0个人，1企业
-          "username": "张三",
-          "company": "单位名称",
-          "registration_number": "DXDADFA22332424"//纳税人识别号
-        },//发票信息，可能为null
-        "owner": "林戏雨",
-        "phone": "13242403775",
-        "address": "广东省深圳市盐田区洪安三街华大公寓7栋9",
-        "remark": "我是备注",
-        "distribution": "顺丰快递",//配送方式
-        "total_freight": 0,//邮费
-        "cart_price": 23000,//订单总价
-        "total_preferential": 0,//优惠价格
-        "total_price": 23000,//支付价格
-        "products": [
-          {
-            "id": "0X01",
-            "name": "安孕可-单基因遗传病携带者筛查",
-            "intro": "新生儿及儿童基因检测",
-            "code": "SOX001",
-            "price": 3200,
-            "original_price": 6666,
-            "img": "/imgs/pic2.jpg",
-            "count": 5
-          },
-          {
-            "id": "0X02",
-            "name": "安馨可-新生儿及儿童基因检测",
-            "intro": "新生儿及儿童基因检测",
-            "code": "SOX002",
-            "price": 3500,
-            "original_price": 6666,
-            "img": "/imgs/pic2.jpg",
-            "count": 2
-          }
-        ]
-      }
+      orderId: options.orderId
     })
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
+    wx.startPullDownRefresh();
+  }, 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
-  },
-  /**
-   * 订单详情
-   */
-  toOrderDetail: function (e) {
-    var orderNumber = e.currentTarget.dataset.number;
-    wx.navigateTo({
-      url: '/pages/order_detail/order_detail?number=' + orderNumber
-    })
+    var that = this;
+      wx.request({
+        url: config.BASE_URL + '/wechat/getWechatOrderDetail.action?orderId='
+        + this.data.orderId,
+        success: function(e) {
+          console.dir(e);
+          console.log(JSON.stringify(e.data.rows));
+          var order = e.data.rows[0];
+          var products = order.items || [];
+          var price1 = 0;
+          var price2 = 0;
+          for(var i in products) {
+            var product = products[i];
+            price1 += parseFloat(product.itemPrice) * parseInt(product.count);
+            price2 += parseFloat(product.itemOriginalPrice) * parseInt(product.count);
+          }
+          var discountsPrice = price2 - price1;
+          if (discountsPrice < 0) {
+            discountsPrice  = 0;
+          }
+          that.setData({
+            discountsPrice: discountsPrice,
+            order: order
+          })
+        },
+        complete: function(e){
+          wx.stopPullDownRefresh();
+        }
+      })
   }
 })

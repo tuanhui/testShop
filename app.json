@@ -7,13 +7,13 @@
     "pages/confirm_order/confirm_order",
     "pages/address_list/address_list",
     "pages/add_address/add_address",
-    "pages/sample/sample",
     "pages/sample_confirm/sample_confirm",
     "pages/invoice/invoice",
     "pages/buy_success/buy_success",
     "pages/sample_success/sample_success",
     "pages/error/error",
-    "pages/order_detail/order_detail"
+    "pages/order_detail/order_detail",
+    "pages/sample/sample"
   ],
   "window": {
     "backgroundTextStyle": "black",

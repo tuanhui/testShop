@@ -33,13 +33,14 @@
 }
 .tool-bar .price .original .name {
   font-size: 24rpx;
+  padding-top: 2rpx;
   color: #B2B2B2;
 }
 .tool-bar .price .original .value {
   font-size: 30rpx;
   color: #B2B2B2;
   margin-left: 9rpx;
-  letter-spacing: -3rpx;
+  letter-spacing: -1rpx;
 }
 .tool-bar .price .original .value::first-letter {
   font-size: 20rpx;

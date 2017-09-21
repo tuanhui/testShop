@@ -1,35 +1,35 @@
 <view class="order-list">
-    <block wx:for="{{orders}}" wx:for-item="order" wx:key="*this">
+    <block wx:for="{{orders}}" wx:for-item="order" wx:for-index="index" wx:key="orderId">
         <view class="order-item">
-            <view class="head" data-number="{{order.order_number}}" bindtap="{{order.order_type !== 0 ? 'toOrderDetail' : ''}}">
+            <view class="head" data-order-id="{{order.orderId}}" bindtap="{{order.orderStatus > 0 ? 'toOrderDetail' : ''}}">
                 <view class="head-l">
                     <view class="item">
                         <text class="name">状态：</text>
-                        <text class="value status">{{order.order_type == 0 ? '等待支付' : (order.order_type == 1 ? '待发货' : (order.order_type == 2 ? '已发货' : '已签收'))}}</text>
+                        <text class="value status">{{order.orderStatus == 0 ? '等待支付' : (order.orderStatus == 1 ? '待发货' : (order.orderStatus == 2 ? '已发货' : '已签收'))}}</text>
                     </view>
                     <view class="item">
                         <text class="name">订单：</text>
-                        <text class="value">{{order.order_number}}</text>
+                        <text class="value">{{order.orderId}}</text>
                     </view>
                 </view>
                 <view class="head-r">
-                    <button class="to-pay" wx:if="{{order.order_type == 0}}" data-id="{{order.prepay_id}}" bindtap="toBuy">去支付</button>
-                    <image class="arrow" src="/imgs/ic_arrow_right.png" wx:if="{{order.order_type > 0}}"></image>
+                    <button class="to-pay" wx:if="{{order.orderStatus == 0}}" data-index="{{index}}" bindtap="toBuy">去支付</button>
+                    <image class="arrow" src="/imgs/ic_arrow_right.png" wx:if="{{order.orderStatus > 0}}"></image>
                 </view>
             </view>
             <view class="product-list">
-                <block wx:key="*this" wx:for="{{order.products}}" wx:for-item="product">
+                <block wx:key="itemId" wx:for="{{order.items}}" wx:for-item="product">
                     <view class="product-item">
-                        <image class="pic" src="{{product.img}}"></image>
+                        <image class="pic" src="{{product.itemImg}}"></image>
                         <view class="info">
                             <view class="name">
-                                <view class="name-val">{{product.name}}</view>
+                                <view class="name-val">{{product.itemName}}</view>
                                 <view class="name-count">x{{product.count}}</view>
                             </view>
-                            <view class="intro">{{product.intro}}</view>
+                            <view class="intro">{{product.itemIntro}}</view>
                             <view class="price">
                               <view class="name"></view>
-                              <view class="value">￥{{product.price}}</view> 
+                              <view class="value">￥{{product.itemPrice * product.count}}</view> 
                             </view>
                         </view>
                     </view>

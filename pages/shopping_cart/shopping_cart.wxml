@@ -1,4 +1,4 @@
-<view class="head-tool">
+<view class="head-tool" wx:if="{{cartList && cartList.length>0}}">
     <image src="/imgs/ic_check_{{checkAll ? 'checked' : 'normal'}}.png" 
            class="icon check" 
            mode="aspectFit"
@@ -13,13 +13,12 @@
 </view>
 <view class="cart-list" id="parent" >
     <block wx:for="{{cartList}}" 
-          wx:key="id" 
+          wx:key="itemId" 
           wx:for-item="cart"
           wx:for-index="index">
     <view class="cart-item"
           id="item{{index}}" 
           data-position="{{index}}"
-          animation="{{delIndex === index ? animationData : null}}" 
           bindtouchstart="onTouchStart" 
           bindtouchcancel="onTouchCancel" 
           bindtouchend="onTouchEnd">
@@ -28,15 +27,15 @@
                  value="{{index}}" 
                  bindtap="changeCheck" 
                  src="/imgs/ic_check_{{cart.checked ? 'checked' : 'normal'}}.png"/> 
-          <image class="pic" src="{{cart.img}}"></image>
+          <image class="pic" src="{{cart.itemImg}}"></image>
           <view class="info">
-              <view class="name">{{cart.name}}</view>
-              <view class="intro">{{cart.intro}}</view>
+              <view class="name">{{cart.itemName}}</view>
+              <view class="intro">{{cart.itemIntro}}</view>
               <view class="price">
-                  <view class="real">￥{{cart.price}}</view>
+                  <view class="real">￥{{cart.itemPrice}}</view>
                   <view class="prev">
                       <view class="title">原价</view>
-                      <view class="value">￥{{cart.original_price}}</view>
+                      <view class="value">￥{{cart.itemOriginalPrice}}</view>
                   </view>
               </view>
               <view class="count-container">

@@ -1,130 +1,498 @@
-<scroll-view scroll-y="{{!chooseNativePlace}}" style="height:{{screenH-100}}px">
-    <view class="head">
-      <image class="pic" src="/imgs/pic1.jpg"></image>
-      <view class="info">
-          <view class="name">安孕可</view>
-          <view class="intro">单基因遗传病携带者筛查69种</view>
-          <view class="type">样本类型：唾液</view>
-      </view>
-    </view>
-    <view class="split-text">检测者信息</view>
-    <view class="sample-info">
-        <view class="item">
-          <view class="title">*样本编号</view>
-          <input type="text" class="value" placeholder="请输入样本编号" value="{{sampleCode}}" placeholder-style="color: #353535;" bindinput="onSampleCodeInput"/>
-          <view class="code" bindtap="getSampleCode">
-            <image class="code-pic" src="/imgs/qdcode.png"></image>
-            <text class="code-text">扫码</text>
+<view wx:if="{{loadSuccess}}">
+    <scroll-view scroll-y="{{!chooseNativePlace}}" style="height:{{screenH-100}}px">
+        <view class="head">
+          <image class="pic" src="{{product.itemImg}}"></image>
+          <view class="info">
+              <view class="name">{{product.itemName}}</view>
+              <view class="intro">{{product.itemIntro}}</view>
+              <view class="type">样本类型: {{sampleType}}</view>
           </view>
         </view>
-        <picker mode="date" value="{{sampleDate}}" start="2017-01-01" end="2047-01-01" bindchange="onSampleDateChange">
-            <view class="picker">
+        <view class="split-text">受检者信息</view>
+        <view class="sample-info">
+            <view class="item">
+              <view class="title">* 样本编号</view>
+              <input type="text" class="value" placeholder="请输入样本编号" value="{{sampleCode}}" placeholder-style="color: #353535;" bindinput="onSampleCodeInput"/>
+              <view class="code" bindtap="getSampleCode">
+                <image class="code-pic" src="/imgs/qdcode.png"></image>
+                <text class="code-text">扫码</text>
+              </view>
+            </view>
+            <picker mode="date" value="{{sampleDate}}" start="2017-01-01" end="2047-01-01" bindchange="onSampleDateChange">
+                <view class="picker">
+                    <view class="item">
+                      <view class="title">
+                          <text class="txt">* 采样时间</text>
+                          <text class="notice">(年-月-日)</text>
+                      </view>
+                      <text class="value">{{sampleDate}}</text>
+                      <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                    </view>
+                </view>
+            </picker>
+            <view class="item">
+              <view class="title">* 姓名</view>
+              <input class="value" type="text" bindinput="onNameInput" placeholder="请输入受检者姓名" placeholder-style="color: #353535;"/>
+            </view>
+            <picker bindchange="onGenderChange" value="{{genderIndex}}" range="{{genderNames}}">
+                <view class="picker">
+                    <view class="item">
+                      <view class="title">* 性别</view>
+                      <text class="value">{{gender ? gender : '请输入受检者性别'}}</text>
+                      <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                    </view>
+                </view>
+            </picker>
+            <picker mode="date" value="{{birthDay}}" start="1900-01-01" end="2050-01-01" bindchange="onBirthDayChange">
+                <view class="picker">
+                    <view class="item">
+                      <view class="title">
+                          <text class="txt">* 出生日期</text>
+                          <text class="notice">(年-月-日)</text>
+                      </view>
+                      <text class="value">{{birthDate ? birthDate : '请输入受检者出生日期'}}</text>
+                      <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                    </view>
+                </view>
+            </picker>
+            <view class="item">
+              <view class="title">年龄</view>
+              <text class="value">{{age}}</text>
+            </view>
+            <view class="item">
+              <view class="title">民族</view>
+              <input bindinput="onNationInput" type="text" class="value" placeholder="请输入民族" placeholder-style="color: #353535;"/>
+              <text class="unit">族</text>
+            </view>
+            <view class="item" bindtap="selectNativePlace">
+              <view class="title">籍贯</view>
+              <text class="value">{{nativePlace ? nativePlace : '请输入籍贯(省市)'}}</text>
+              <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+            </view>
+        </view>
+        <!--  安全用药 -->
+        <view class="clinic SD0126" wx:if="{{_type === 'SD0126'}}">
+            <picker value="{{products}}" value="{{index}}" range="{{productNames}}" bindchange="onProductChange">
+                <view class="picker">
+                    <view class="product-item">
+                        <view class="title">* 产品</view>
+                        <text class="value">{{mProductName ? mProductName : '请选择产品分类'}}</text>
+                        <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                    </view>
+                </view>
+            </picker>
+            <view class="item" wx:if="{{mProductCode === 'SD0126'}}">
+                <view class="title">* 监护人姓名</view>
+                <input class="value" bindinput="onGuardianshipInput" type="text" placeholder="请输入受检者姓名" placeholder-style="color: #353535;" />
+            </view>
+            <view class="split-text">接收报告信息</view>
+            <view class="item">
+              <view class="title">收货人姓名</view>
+              <text class="value">与受检者姓名一致</text>
+            </view>
+            <view class="item" bindtap="chooseAddress">
+              <view class="title">* 收件地址</view>
+              <text class="value">{{address ? address : '请输入接收报告的地址'}}</text>
+              <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+            </view>
+            <view class="item">
+              <view class="title">* 联系电话</view>
+              <input class="value" type="number" bindinput="onPhoneInput" value="{{phone}}" placeholder="请输入手机号" placeholder-style="color: #353535;"/>
+            </view>
+        </view>
+        <!-- 安孕可 -->
+        <view class="clinic DX1413" wx:if="{{_type === 'DX1413'}}">
+            <view class="split-text">临床信息</view>
+            <view class="item checkbox">
+                <view class="title">* 目前是否怀孕</view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" data-flag="1" bindtap="changePregnancyFlag" src="/imgs/ic_check_{{pregnancyFlag == 1 ? 'checked' : 'normal'}}.png"></image><text>是</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" data-flag="2" bindtap="changePregnancyFlag" src="/imgs/ic_check_{{pregnancyFlag == 2 ? 'checked' : 'normal'}}.png"></image><text>否</text>
+                    </view>
+                </view>
+            </view>
+            <view class="item" wx:if="{{pregnancyFlag == 1}}">
+              <view class="title">* 当前孕周</view>
+              <input type="text" bindinput="onPregnancyTimeInput" class="value" placeholder="请输入孕周(如：6周6天)"  placeholder-style="color: #353535;"/>
+            </view>
+            <view class="item checkbox">
+                <view class="title">
+                    <text class="txt">* 不良孕产史</text>
+                    <text class="notice">(如畸形胎儿,流产)</text>
+                </view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" data-flag="1" bindtap="changeBadPregnancyFlag" src="/imgs/ic_check_{{badPregnancyFlag == 1 ? 'checked' : 'normal'}}.png"></image><text>有</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" data-flag="2" bindtap="changeBadPregnancyFlag" src="/imgs/ic_check_{{badPregnancyFlag == 2 ? 'checked' : 'normal'}}.png"></image><text>无</text>
+                    </view>
+                </view>
+            </view>
+            <view class="item" wx:if="{{badPregnancyFlag == 1}}">
+              <view class="title">* 描述</view>
+              <input type="text" class="value" bindinput="onBadPpregnancyInput" placeholder="请输入不良孕产史详情" placeholder-style="color: #353535;"/>
+            </view>
+            <view class="item checkbox">
+                <view class="title">* 家族遗传病史</view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" data-flag="1" bindtap="changeFamilyProduceFlag" src="/imgs/ic_check_{{familyProduceFlag == 1 ? 'checked' : 'normal'}}.png"></image><text>有</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" data-flag="2" bindtap="changeFamilyProduceFlag" src="/imgs/ic_check_{{familyProduceFlag == 2 ? 'checked' : 'normal'}}.png"></image><text>无</text>
+                    </view>
+                </view>
+            </view>
+            <view class="item" wx:if="{{familyProduceFlag == 1}}">
+              <view class="title">* 描述</view>
+              <input type="text" class="value" bindinput="onFamilyProduceInput" placeholder="请输入家族遗传病史详情"  placeholder-style="color: #353535;"/>
+            </view>
+            <view class="item checkbox">
+                <view class="title">* 近亲结婚</view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" data-flag="1" bindtap="changeNearRelationFlag" src="/imgs/ic_check_{{nearRelationFlag == 1 ? 'checked' : 'normal'}}.png"></image><text>是</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" data-flag="2" bindtap="changeNearRelationFlag" src="/imgs/ic_check_{{nearRelationFlag == 2 ? 'checked' : 'normal'}}.png"></image><text>否</text>
+                    </view>
+                </view>
+            </view>
+            <view class="item" wx:if="{{nearRelationFlag == 1}}">
+              <view class="title" wx:if="{{nearRelationFlag == 1}}">* 描述</view>
+              <input type="text" class="value" bindinput="onNearRelationInput" placeholder="请描述婚姻双方亲缘关系" placeholder-style="color: #353535;"/>
+            </view>
+            <view class="item checkbox">
+                <view class="title">* 疑似遗传病患者</view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" data-flag="1" bindtap="changeBeGeneticFlag" src="/imgs/ic_check_{{beGeneticFlag == 1 ? 'checked' : 'normal'}}.png"></image><text>是</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" data-flag="2" bindtap="changeBeGeneticFlag" src="/imgs/ic_check_{{beGeneticFlag == 2 ? 'checked' : 'normal'}}.png"></image><text>否</text>
+                    </view>
+                </view>
+            </view>
+            <view class="item" wx:if="{{beGeneticFlag == 1}}">
+              <view class="title">* 描述</view>
+              <input type="text" class="value" bindinput="onBeGeneticInput" placeholder="请详述疾病及临床症状" placeholder-style="color: #353535;"/>
+            </view>
+            <view class="split-text">接收报告信息</view>
+            <view class="item">
+              <view class="title">收货人姓名</view>
+              <text class="value">与受检者姓名一致</text>
+            </view>
+            <view class="item" bindtap="chooseAddress">
+              <view class="title">* 收件地址</view>
+              <text class="value">{{address ? address : '请输入接收报告的地址'}}</text>
+              <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+            </view>
+            <view class="item">
+              <view class="title">* 联系电话</view>
+              <input class="value" type="number" bindinput="onPhoneInput" value="{{phone}}" placeholder="请输入手机号" placeholder-style="color: #353535;"/>
+            </view>
+        </view>
+        <!-- 遗传性心律失常 -->
+        <view class="clinic DX1327" wx:if="{{_type === 'DX1327'}}">
+            <view class="split-text">临床信息</view>
+            <view class="item">
+                <view class="title">* 电子邮件</view>
+                <input class="value" bindinput="onEmailInput" type="text" placeholder="请输入邮件" placeholder-style="color: #353535;" />
+            </view>
+            <picker bindchange="onPatientChange" value="{{patientValue}}" range="{{patientArray}}">
+                <view class="picker">
+                    <view class="item">
+                      <view class="title">* 受检者类型</view>
+                      <text class="value">{{patientName ? patientName : '请选择受检者类型'}}</text>
+                      <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                    </view>
+                </view>
+            </picker>
+            <view class="item checkbox">
+                <view class="title">* 受检者心脏类疾病史</view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" src="/imgs/ic_check_{{personalHistoryFlag == 1 ? 'checked' : 'normal'}}.png" data-flag="1" bindtap="changePersonalHistoryFlag"></image><text>有</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" src="/imgs/ic_check_{{personalHistoryFlag == 2 ? 'checked' : 'normal'}}.png" data-flag="2" bindtap="changePersonalHistoryFlag"></image><text>无</text>
+                    </view>
+                </view>
+            </view>
+            <view class="item" wx:if="{{personalHistoryFlag == 1}}">
+              <view class="title">* 描述</view>
+              <input type="text" class="value" bindinput="onPersonalHistoryInput" placeholder="请详述疾病名称和临床症状"  placeholder-style="color: #353535;"/>
+            </view>
+            <view class="item checkbox">
+                <view class="title">* 家族心脏类疾病史</view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" src="/imgs/ic_check_{{familyProduceFlag == 1 ? 'checked' : 'normal'}}.png" data-flag="1" bindtap="changeFamilyProduceFlag"></image><text>是</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" src="/imgs/ic_check_{{familyProduceFlag == 2 ? 'checked' : 'normal'}}.png" data-flag="2" bindtap="changeFamilyProduceFlag"></image><text>否</text>
+                    </view>
+                </view>
+            </view>
+            <view class="detail" wx:if="{{familyProduceFlag == 1}}">
                 <view class="item">
-                  <view class="title">
-                      <text class="txt">*采样时间</text>
-                      <text class="notice">(年-月-日)</text>
+                  <view class="title">* 受检者与患病亲属关系</view>
+                  <input type="text" class="value" bindinput="onfamilyRelationInput" placeholder="请描述婚姻双方亲缘关系" placeholder-style="color: #353535;"/>
+                </view>
+                <view class="item">
+                  <view class="title">* 家族心脏类疾病史症状</view>
+                  <input type="text" class="value" bindinput="onFamilyProduceInput"  placeholder="请输入临床症状" placeholder-style="color: #353535;"/>
+                </view>
+            </view>
+            <view class="split-text">接收报告信息</view>
+            <view class="item">
+              <view class="title">收货人姓名</view>
+              <text class="value">与受检者姓名一致</text>
+            </view>
+            <view class="item" bindtap="chooseAddress">
+              <view class="title">* 收件地址</view>
+              <text class="value">{{address ? address : '请输入接收报告的地址'}}</text>
+              <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+            </view>
+            <view class="item">
+              <view class="title">* 联系电话</view>
+              <input class="value" type="number" bindinput="onPhoneInput" value="{{phone}}" placeholder="请输入手机号" placeholder-style="color: #353535;"/>
+            </view>
+        </view>
+        <!-- 安馨可 -->
+        <view class="clinic DX0630" wx:if="{{_type === 'DX0630'}}">
+            <view class="split-text">临床信息</view>
+            <picker bindchange="onPatientChange" value="{{patientValue}}" range="{{patientArray}}">
+                <view class="picker">
+                    <view class="item">
+                      <view class="title">* 受检者类型</view>
+                      <text class="value">{{patientName ? patientName : '请选择受检者类型'}}</text>
+                      <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                    </view>
+                </view>
+            </picker>
+            <view class="item">
+                <view class="title">* 临床表现</view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" src="/imgs/ic_check_{{clinicalManifestationFlag == 1 ? 'checked' : 'normal'}}.png" data-flag="1" bindtap="changeClinicalManifestationFlag"></image><text>有</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" src="/imgs/ic_check_{{clinicalManifestationFlag == 2 ? 'checked' : 'normal'}}.png" data-flag="2" bindtap="changeClinicalManifestationFlag"></image><text>无</text>
+                    </view>
+                </view>
+            </view>
+            <view class="item" wx:if="{{clinicalManifestationFlag == 1}}">
+                <view class="title">* 描述</view>
+                <input type="text" bindinput="onClinicalManifestationChange" class="value" placeholder="请输入临床表现及诊断结果" placeholder-style="color: #353535;"/>
+            </view>
+            <view class="item">
+                <view class="title">* 监护人姓名</view>
+                <input class="value" bindinput="onGuardianshipInput" type="text" placeholder="请输入监护人姓名" placeholder-style="color: #353535;" />
+            </view>
+            <view class="item">
+                <view class="title">* 电子邮件</view>
+                <input class="value" bindinput="onEmailInput" type="text" placeholder="请输入邮件" placeholder-style="color: #353535;" />
+            </view>
+            <view class="item">
+                <view class="title">* 母亲姓名</view>
+                <input class="value" bindinput="onMotherNameInput" type="text" placeholder="请输入受检者母亲姓名" placeholder-style="color: #353535;" />
+            </view>
+            <view class="item">
+                <view class="title">* 母亲年龄</view>
+                <input class="value" bindinput="onMotherAgeInput" type="number" placeholder="请输入受检者母亲姓名" placeholder-style="color: #353535;" />
+            </view>
+            <view class="item checkbox">
+                <view class="title">* 母亲家族遗传病史</view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" data-flag="1" src="/imgs/ic_check_{{motherProduceFlag == 1 ? 'checked' : 'normal'}}.png" bindtap="changeMotherProduceFlag"></image><text>有</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" data-flag="2" src="/imgs/ic_check_{{motherProduceFlag == 2 ? 'checked' : 'normal'}}.png" bindtap="changeMotherProduceFlag"></image><text>无</text>
+                    </view>
+                </view>
+            </view>
+            <view class="item" wx:if="{{motherProduceFlag == 1}}">
+                <view class="title">* 详情</view>
+                <input type="text" class="value" bindinput="onMotherProduceChange" placeholder="请输入母亲家族遗传病史详情" placeholder-style="color: #353535;"/>
+            </view>
+            <view class="item">
+                <view class="title">* 父亲姓名</view>
+                <input class="value" bindinput="onFatherNameInput" type="text" placeholder="请输入受检者父亲姓名" placeholder-style="color: #353535;" />
+            </view>
+            <view class="item">
+                <view class="title">* 父亲年龄</view>
+                <input class="value" bindinput="onFatherAgeInput" type="number" placeholder="请输入受检者父亲年龄" placeholder-style="color: #353535;" />
+            </view>
+            <view class="item checkbox">
+                <view class="title">* 父亲家族遗传病史</view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" data-flag="1" src="/imgs/ic_check_{{fatherProduceFlag == 1 ? 'checked' : 'normal'}}.png" bindtap="changeFatherProduceFlag"></image><text>有</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" data-flag="2" src="/imgs/ic_check_{{fatherProduceFlag == 2 ? 'checked' : 'normal'}}.png" bindtap="changeFatherProduceFlag"></image><text>无</text>
+                    </view>
+                </view>
+            </view>
+            <view class="item" wx:if="{{fatherProduceFlag == 1}}">
+                <view class="title">* 详情</view>
+                <input type="text" class="value" bindinput="onFatherProduceChange" placeholder="请输入父亲家族遗传病史详情" placeholder-style="color: #353535;"/>
+            </view>
+            <view class="split-text">接收报告信息</view>
+            <view class="item">
+              <view class="title">收货人姓名</view>
+              <text class="value">与受检者姓名一致</text>
+            </view>
+            <view class="item" bindtap="chooseAddress">
+              <view class="title">* 收件地址</view>
+              <text class="value">{{address ? address : '请输入接收报告的地址'}}</text>
+              <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+            </view>
+            <view class="item">
+              <view class="title">* 联系电话</view>
+              <input class="value" type="number" bindinput="onPhoneInput" value="{{phone}}" placeholder="请输入手机号" placeholder-style="color: #353535;"/>
+            </view>
+        </view>
+        <!-- 遗传性肿瘤基因检测 -->
+        <view class="clinic DX1267" wx:if="{{_type === 'DX1267'}}">
+            <view class="split-text">临床信息</view>
+              <picker value="{{products}}" value="{{index}}" range="{{productNames}}" bindchange="onProductChange">
+                  <view class="picker">
+                      <view class="item">
+                          <view class="title">* 产品</view>
+                          <text class="value">{{mProductName ? mProductName : '请选择产品分类'}}</text>
+                          <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                      </view>
                   </view>
-                  <text class="value">{{sampleDate}}</text>
-                  <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+              </picker>
+            <picker bindchange="onPatientChange" value="{{patientValue}}" range="{{patientArray}}">
+                <view class="picker">
+                    <view class="item">
+                      <view class="title">* 受检者类型</view>
+                      <text class="value">{{patientName ? patientName : '请选择受检者类型'}}</text>
+                      <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                    </view>
+                </view>
+            </picker>
+            <view class="item">
+                <view class="title">* 电子邮件</view>
+                <input class="value" bindinput="onEmailInput" type="text" placeholder="请输入邮件" placeholder-style="color: #353535;" />
+            </view>
+            <view class="item checkbox">
+                <view class="title">* 受检者癌症病史</view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" data-flag="1" src="/imgs/ic_check_{{clinicalDiagnosisFlag == 1 ? 'checked' : 'normal'}}.png" bindtap="changeClinicalDiagnosisFlag"></image><text>有</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" data-flag="2" src="/imgs/ic_check_{{clinicalDiagnosisFlag == 2 ? 'checked' : 'normal'}}.png" bindtap="changeClinicalDiagnosisFlag"></image><text>无</text>
+                    </view>
                 </view>
             </view>
-        </picker>
-        <view class="item">
-          <view class="title">*姓名</view>
-          <input class="value" type="text" bindinput="onNameInput" placeholder="请输入检测者姓名" placeholder-style="color: #353535;"/>
-        </view>
-        <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
-            <view class="picker">
+            <view class="detail" wx:if="{{clinicalDiagnosisFlag == 1}}">
                 <view class="item">
-                  <view class="title">*性别</view>
-                  <text class="value">{{gender ? gender : '请输入检测者性别'}}</text>
-                  <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                    <view class="title">* 详情</view>
+                    <input type="text" bindinput="onClinicalDiagnosisInput" class="value" placeholder="请输入临床诊断详情" placeholder-style="color: #353535;"/>
                 </view>
-            </view>
-        </picker>
-        <picker mode="date" value="{{birthDay}}" start="1900-01-01" end="2050-01-01" bindchange="onBirthDayChange">
-            <view class="picker">
                 <view class="item">
-                  <view class="title">
-                      <text class="txt">*出生日期</text>
-                      <text class="notice">(年-月-日)</text>
-                  </view>
-                  <text class="value">{{birthDate ? birthDate : '请输入检测者出生日期'}}</text>
-                  <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+                    <view class="title">* 发病年龄</view>
+                    <input type="number" class="value" bindinput="onSetAgeInput" placeholder="请输入发病年龄" placeholder-style="color: #353535;"/>
                 </view>
             </view>
-        </picker>
-        <view class="item">
-          <view class="title">年龄</view>
-          <text class="value">{{age}}</text>
-        </view>
-        <view class="item">
-          <view class="title">民族</view>
-          <input type="text" class="value" placeholder="请输入民族" placeholder-style="color: #353535;"/>
-          <text class="unit">族</text>
-        </view>
-        <view class="item" bindtap="selectNativePlace">
-          <view class="title">籍贯</view>
-          <text class="value">{{nativePlace ? nativePlace : '请输入籍贯(省市)'}}</text>
-          <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
-        </view>
-        <view class="item">
-          <view class="title">监护人姓名</view>
-          <input class="value" type="text" placeholder="请输入检测者姓名" placeholder-style="color: #353535;" />
-        </view>
-        <view class="item">
-          <view class="title">*联系电话</view>
-          <input class="value" type="number" bindinput="onPhoneInput" placeholder="请输入手机号" placeholder-style="color: #353535;"/>
-        </view>
-        <view class="item" bindtap="chooseAddress">
-          <view class="title">
-              <text class="txt">*收件地址</text>
-              <text class="notice">(报告发放地址)</text>
-          </view>
-          <text class="value">{{address ? address : '请输入接收报告的地址'}}</text>
-          <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
-        </view>
-    </view>
-    <view class="split-text">知情同意</view>
-      <view class="argument">
-        <view class="item">
-            <text class="title">查看</text>
-            <text class="text link">《单基因遗传病携带者筛查69种知情同意书》</text>
-        </view>
-        <view class="item" bindtap="checkProtocol_1">
-            <image class="checkbox" src="/imgs/checkbox_{{protocol_1 ? 'checked' : 'normal'}}.png"></image>
-            <text class="text">我同意捐赠剩余样本和检测数据（可选）</text>
-        </view>
-        <view class="item" bindtap="checkProtocol_2">
-          <image class="checkbox" src="/imgs/checkbox_{{protocol_2 ? 'checked' : 'normal'}}.png"></image>
-            <text class="text">我同意进行单基因遗传病携带者筛查69种</text>
-        </view>
-    </view>
-    <view class="commit-container">
-      <button class="check-btn" bindtap="checkInput">提交</button>
-    </view>
-</scroll-view>
-<view wx:if="{{chooseNativePlace}}">
-    <view class="set-value">
-        <!--籍贯选择 -->
-        <view class="pick address-pick">
-            <picker-view 
-              indicator-style="height: 50px;color: rgb(105, 168, 248);" 
-              style="width: 100%; height: 150px;line-height:50px;" 
-              value="{{value}}" 
-              bindchange="bindChange">
-              <picker-view-column>
-                <view wx:for="{{provinces}}" wx:key="*this" style="line-height: 50px;">{{item}}</view>
-              </picker-view-column>
-              <picker-view-column>
-                <view wx:for="{{cities}}" wx:key="*this" style="line-height: 50px;">{{item}}</view>
-              </picker-view-column>
-            </picker-view>
-            <view class="operate">
-                <view class="btn-cancel" bindtap="hideDialog">取消</view>
-                <view class="btn-confirm" bindtap="confirmVal">确定</view>
+            <view class="item checkbox">
+                <view class="title">* 家族是否有癌症病史</view>
+                <view class="value">
+                    <view class="value-left">
+                        <image class="icon check" data-flag="1" src="/imgs/ic_check_{{familyCancerHistoryFlag == 1 ? 'checked' : 'normal'}}.png" bindtap="changeFamilyCancerHistoryFlag"></image><text>是</text>
+                    </view>
+                    <view class="value-right">
+                        <image class="icon check" data-flag="2" src="/imgs/ic_check_{{familyCancerHistoryFlag == 2 ? 'checked' : 'normal'}}.png" bindtap="changeFamilyCancerHistoryFlag"></image><text>否</text>
+                    </view>
+                </view>
+            </view>
+            <view class="detail" wx:if="{{familyCancerHistoryFlag == 1}}">
+                <view class="item">
+                    <view class="title">* 详情</view>
+                    <input type="text" class="value" bindinput="onClinicalManifestationInput" placeholder="请输入家族癌症病史临床诊断详情" placeholder-style="color: #353535;"/>
+                </view>
+                <view class="item">
+                    <view class="title">* 受检者与癌症患者亲属关系</view>
+                    <input type="text" class="value" bindinput="onfamilyRelationInput" placeholder="请输入亲属关系" placeholder-style="color: #353535;"/>
+                </view>
+                <view class="item">
+                    <view class="title">* 该亲属的癌症类型</view>
+                    <input type="text" class="value" bindinput="onCancer_typeInput" placeholder="请输入该亲属的癌症类型" placeholder-style="color: #353535;"/>
+                </view>
+                <view class="item">
+                    <view class="title">* 该亲属的癌症发病年龄</view>
+                    <input type="number" class="value" bindinput="onCancer_ageInput" placeholder="请输入该亲属的癌症发病年龄" placeholder-style="color: #353535;"/>
+                </view>
+            </view>
+            <view class="split-text">接收报告信息</view>
+            <view class="item">
+              <view class="title">收货人姓名</view>
+              <text class="value">与受检者姓名一致</text>
+            </view>
+            <view class="item" bindtap="chooseAddress">
+              <view class="title">* 收件地址</view>
+              <text class="value">{{address ? address : '请输入接收报告的地址'}}</text>
+              <view class="arrow weui-cell__ft weui-cell__ft_in-access"></view>
+            </view>
+            <view class="item">
+              <view class="title">* 联系电话</view>
+              <input class="value" type="number" bindinput="onPhoneInput" value="{{phone}}" placeholder="请输入手机号" placeholder-style="color: #353535;"/>
             </view>
         </view>
+        <view class="split-text" wx:if="{{false}}">知情同意</view>
+          <view class="argument" wx:if="{{false}}">
+            <view class="item">
+                <text class="title">查看</text>
+                <text class="text link">《单基因遗传病携带者筛查69种知情同意书》</text>
+            </view>
+            <view class="item" bindtap="checkProtocol_1">
+                <image class="checkbox" src="/imgs/checkbox_{{protocol_1 ? 'checked' : 'normal'}}.png"></image>
+                <text class="text">我同意捐赠剩余样本和检测数据（可选）</text>
+            </view>
+            <view class="item" bindtap="checkProtocol_2">
+              <image class="checkbox" src="/imgs/checkbox_{{protocol_2 ? 'checked' : 'normal'}}.png"></image>
+              <text class="text">我同意进行单基因遗传病携带者筛查69种</text>
+            </view>
+        </view>
+        <view class="commit-container">
+          <button class="check-btn" bindtap="checkInput">提交</button>
+        </view>
+    </scroll-view>
+    <view wx:if="{{chooseNativePlace}}">
+        <view class="set-value">
+            <!--籍贯选择 -->
+            <view class="pick address-pick">
+                <picker-view 
+                  indicator-style="height: 50px;color: rgb(105, 168, 248);" 
+                  style="width: 100%; height: 150px;line-height:50px;" 
+                  value="{{value}}" 
+                  bindchange="bindChange">
+                  <picker-view-column>
+                    <view wx:for="{{provinces}}" wx:key="*this" style="line-height: 50px;">{{item}}</view>
+                  </picker-view-column>
+                  <picker-view-column>
+                    <view wx:for="{{cities}}" wx:key="*this" style="line-height: 50px;">{{item}}</view>
+                  </picker-view-column>
+                </picker-view>
+                <view class="operate">
+                    <view class="btn-cancel" bindtap="hideDialog">取消</view>
+                    <view class="btn-confirm" bindtap="confirmVal">确定</view>
+                </view>
+            </view>
+        </view>
+        <view class="cover" bindtap="hideDialog"></view>
     </view>
-    <view class="cover" bindtap="hideDialog"></view>
+</view>
+<view wx:if="{{!loadSuccess}}">
+      <view class="reload" bindtap='reloadData'>重新载入</view>
 </view>

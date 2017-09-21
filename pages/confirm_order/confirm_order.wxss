@@ -72,12 +72,12 @@ Page {
   height: 50rpx;
   text-align: center;
   font-size: 30rpx;
-  background: #FAFAFA;
   box-sizing: border-box;
   vertical-align: top; 
   line-height: 46rpx;
   border-right: 1rpx solid #CBCBCB;
   color: #353535;
+  background: #FAFAFA;
 }
 .product .info .price-count .count-container .count-item.minus.disable {
   color: rgb(220, 220, 220);
@@ -145,14 +145,19 @@ Page {
   opacity: 0.5;
 }
 .expressage .item .value  {
-  height: 40rpx;
-  font-size: 28rpx;
+  height: 33rpx;
   flex: 1;
-  line-height: 120rpx;
+  text-align: left;
+  line-height: 33rpx;
+  font-size: 28rpx;
   opacity: 0.5;
   color: #353535;
-  box-sizing: border-box;
-  margin-left: 47rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  margin: auto 0 auto 47rpx ;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 .expressage .item .value.hint {
   text-align: right;

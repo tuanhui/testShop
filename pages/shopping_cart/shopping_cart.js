@@ -13,8 +13,6 @@ Page({
   },
   
   onLoad: function (options) {
-    console.log('onload');
-    
   },
   onInput: function (e) {
     var value = e.detail.value;
@@ -38,7 +36,7 @@ Page({
       for (var i = 0; i < datas.length; i++) {
         var item = datas[i];
         if (item.checked) {
-          cartsPrice += parseFloat(item.price) * parseInt(item.count);
+          cartsPrice += parseFloat(item.itemPrice) * parseInt(item.count);
         }
       }
     }
@@ -50,17 +48,23 @@ Page({
     })
   },
   onShow: function () {
-    console.log('onshow');
+    if (app.isFromCartOrderSuccess) {
+      app.isFromCartOrderSuccess = false;
+      wx.navigateTo({
+        url: '/pages/buy_success/buy_success?isFromCart=true',
+      })
+    }
     app.getCarts(function (carts) {
       var totalPrice = 0;
       var totalCount = 0;
       for (var i = 0; i < carts.length; i++) {
         var item = carts[i];
         if (item.checked) {
-          totalPrice += parseFloat(item.price) * parseInt(item.count);
+          totalPrice += parseFloat(item.itemPrice) * parseInt(item.count);
           totalCount += 1;
         }
       }
+      console.log(JSON.stringify(carts));
       this.setData({
         cartList: carts,
         totalPrice: totalPrice.toFixed(2),
@@ -83,10 +87,10 @@ Page({
     this.data.cartList[position].checked = checked;
     var totalPrice = parseFloat(this.data.totalPrice);
     if (checked) {
-      totalPrice += parseFloat(item.price) * parseInt(item.count);
+      totalPrice += parseFloat(item.itemPrice) * parseInt(item.count);
       totalCount += 1;
     } else {
-      totalPrice -= parseFloat(item.price) * parseInt(item.count);
+      totalPrice -= parseFloat(item.itemPrice) * parseInt(item.count);
       totalCount -= 1;
     }
     this.setData({
@@ -105,7 +109,7 @@ Page({
         item.count = count;
         var totalPrice = parseFloat(this.data.totalPrice);
         if (item.checked) {
-          totalPrice -= parseFloat(item.price);
+          totalPrice -= parseFloat(item.itemPrice);
         }
         this.setData({
           cartList: this.data.cartList,
@@ -123,7 +127,7 @@ Page({
         item.count = count;
         var totalPrice = parseFloat(this.data.totalPrice);
         if (item.checked) {
-          totalPrice += parseFloat(item.price);
+          totalPrice += parseFloat(item.itemPrice);
         }
         this.setData({
           cartList: this.data.cartList,
@@ -143,8 +147,7 @@ Page({
             item.checked = checkAll;
             if (checkAll) {
               totalCount += 1;
-              console.log('count = ' + item.count, 'price = ' + item.price);
-              totalPrice += parseFloat(item.price) * parseInt(item.count);
+              totalPrice += parseFloat(item.itemPrice) * parseInt(item.count);
             }
           }
        }
@@ -156,12 +159,10 @@ Page({
       })
   },
   onTouchStart: function(e){
-    console.dir(e);
     this.startX = e.touches[0].clientX;
     this.startY = e.touches[0].clientY;
   },
   onTouchEnd: function (e) {
-    console.dir(e);
     if (this.data.delIndex != -1) {
       var animation = wx.createAnimation();
       animation.translateX(0).step();
@@ -179,7 +180,6 @@ Page({
     if(typeof changeX === 'number' && typeof changeY === 'number') {
       var position = e.currentTarget.dataset.position;
       if (changeX < -10 && Math.abs(changeX - changeY) > 10 && Math.abs(changeY) < 100) {
-        console.log(changeY);
         this.setData({
           delIndex: position,
         });
@@ -227,7 +227,6 @@ Page({
           }
           app.delCarts(that.data.cartList, function () {
             app.getCarts(function(carts){
-              console.dir(carts);
               wx.hideLoading();
               if (carts) {
                   var totalCount = 0;
@@ -237,7 +236,7 @@ Page({
                     var cart = carts[i];
                     if(cart.checked) {
                       totalCount += 1;
-                      totalPrice += parseInt(cart.count) * parseFloat(cart.price);
+                      totalPrice += parseInt(cart.count) * parseFloat(cart.itemPrice);
                     }
                   }
                   that.setData({
@@ -265,7 +264,6 @@ Page({
       }
     }
     app.buyCarts = carts;
-    console.dir(app.buyCarts);
     wx.navigateTo({
       url: '/pages/confirm_order/confirm_order?isFromCart=true',
     })

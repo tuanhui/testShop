@@ -1,4 +1,4 @@
 <image class="icon" src="/imgs/ic_success.png"></image>
 <view class="title">购买成功</view>
 <view class="hint">您的订单已完成支付，我们会尽快为您安排出库。</view>
-<button class="btn">查看订单</button>
+<button class="btn" bindtap='toOrderList'>查看订单</button>

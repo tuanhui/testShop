@@ -67,6 +67,7 @@ Page {
 }
 .company .item .value {
   margin-left: 47rpx;
+  flex: 1;
   color: #A2A2A2;
 }
 .holder-value {

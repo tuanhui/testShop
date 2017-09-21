@@ -9,14 +9,14 @@
 </view>
 <view class="tool-bar" wx:if="{{product}}">
     <view class="price">
-        <view class="real">￥{{product.price}}</view>
-        <view class="original">
+        <view class="real">￥{{product.itemPrice}}</view>
+        <view class="original" wx:if="{{product.itemOriginalPrice > 0}}">
             <text class="name">原价</text>
-            <text class="value">￥{{product.original_price}}</text>
+            <text class="value">￥{{product.itemOriginalPrice}}</text>
         </view>
     </view>
     <view class="add-cart" bindtap="addToCart">
-        <image class="icon" src="/imgs/ic_shopping_cart_normal.png" mode="scaleToFill"></image>
+        <image class="icon" src="/imgs/ic_cart.png" mode="scaleToFill"></image>
     </view>
     <view class="to-buy" bindtap="buy">
         提交订单

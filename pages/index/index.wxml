@@ -1,32 +1,64 @@
-<swiper wx:if="{{false}}"
-    indicator-dots="{{indicatorDots}}"
-    autoplay="{{autoplay}}" 
-    interval="{{interval}}" 
-    duration="{{duration}}"
-    circular="{{true}}">
-    <block wx:for="{{product.imgUrls}}">
-      <swiper-item>
-        <view class="slide-image" style=" background-image: url({{item}})"/>
-      </swiper-item>
-    </block>
-</swiper>
-<view class="container">
+<view wx:if="{{loadingSuccess}}">
+    <swiper
+        indicator-dots="{{indicatorDots}}"
+        autoplay="{{autoplay}}" 
+        indicator-color="rgba(255,255,255,.5)"
+        indicator-active-color="#fff"
+        duration="{{duration}}"
+        circular="{{true}}">
+        <block wx:for="{{banners}}" wx:for-item="banner" wx:key="*this">
+          <swiper-item>
+            <image class="swiper-img" src="{{banner}}" mode="widthFix"></image>
+          </swiper-item>
+        </block>
+    </swiper>
+    <view class="time-container" wx:if="{{! isActive}}">
+        <view class="title">限时秒杀</view>
+        <view class="row">
+            <view class="column">
+              <view class="time">{{values[0]}}</view> 
+              <view class="status">已结束</view>
+            </view>
+            <view class="column">
+              <view class="time">{{values[1]}}</view> 
+              <view class="status">抢购中</view>
+            </view>
+            <view class="column">
+              <view class="time">{{values[2]}}</view> 
+              <view class="status">即将开始</view>
+            </view>
+            <view class="column">
+              <view class="time">{{values[3]}}</view> 
+              <view class="status">即将开始</view>
+            </view>
+        </view>
+    </view>
+    <view  wx:if="{{isActive}}" class="time-container">
+        <view class="title">9月9日限时秒杀</view>
+        <view class="row">
+            <view class="column-active">
+                正在优惠:<text class="value">{{hours}}</text>小时<text class="value">{{minutes}}</text>分<text class="value">{{seconds}}</text>秒
+            </view>
+        </view>
+    </view>
     <view class="product_list">
-        <block wx:key="*this" 
-               wx:for="{{productList}}" 
-               wx:for-item="product">
+        <block wx:key="itemId" 
+                wx:for="{{productList}}" 
+                wx:for-item="product">
             <view class="item" 
-                  data-id="{{product.id}}" 
+                  data-id="{{product.itemId}}" 
                   bindtap="toDetail">
-                <image class="item-l pic" src="{{product.img}}"></image>
+                <image class="item-l pic" src="{{product.itemImg}}"></image>
                 <view class="item-r">
-                    <view class="name">{{product.name}}</view>
-                    <view class="intro">{{product.intro}}</view>
+                    <view class="title">
+                        <view class="name">{{product.itemName}}</view>
+                        <view class="intro">{{product.itemIntro}}</view>
+                    </view>
                     <view class="price">
-                        <view class="real">￥{{product.price}}</view>
-                        <view class="original" wx:if="{{product.original_price}}">
-                            <text class="name">原价</text>
-                            <text class="value">￥{{product.original_price}}</text>
+                        <view class="real">￥{{product.itemPrice}}</view>
+                        <view class="original" wx:if="{{product.itemOriginalPrice > 0}}">
+                            <view class="name">原价</view>
+                            <view class="value">￥{{product.itemOriginalPrice}}</view>
                         </view>
                     </view>
                     <button class="btn buy">
@@ -35,5 +67,11 @@
                 </view>
             </view>
         </block>
+        <view class="concat-us">
+            <view class="content" bindtap='callUs' data-phone="4006056655">
+                <image class="icon" src='/imgs/ic_call.png'></image>
+                <view class="phone">联系客服：400-605-6655</view>
+            </view>
+        </view>
     </view>
 </view>

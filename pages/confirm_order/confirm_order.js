@@ -1,4 +1,5 @@
 // confirm_order.js
+var config = require('../../utils/config.js');
 var app = getApp();
 Page({
   /**
@@ -9,10 +10,11 @@ Page({
     totalFreight: 0,
     cartsPrice: 0,
     totalPrice: 0,
-    isFromCart: false,
+    prices: 0,
+    isFromCart: false,    
     showOther: true,
     showHint: false,
-    ip: '',
+    minusPrice: 0,
     owner: '',
     phone: '',
     remark: '',
@@ -21,45 +23,40 @@ Page({
     invoice: ''
   },
   onUnload: function () {
-    console.log("order onUnload");
     app.invoice = null;
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.dir(options);
     var that = this;
-    wx.request({
-      url: 'http://jsonip.com',
-      success: function (e) {
-        console.log(e.data.ip)
-        that.setData({
-          ip: e.data.ip
-        })
-      }
-    })
     var isFromCart = options.isFromCart === "true";
     var carts = app.buyCarts;
-    console.dir(carts);
     var totalFreight = 0;
     var cartsPrice = 0;
     var totalPrice = 0;
+    var prices = 0;
     for (var i = 0; i < carts.length; i++) {
       var cart = carts[i];
-      cartsPrice += parseFloat(cart.price) * parseInt(cart.count);
+      prices += parseFloat(cart.itemOriginalPrice || 0) * parseInt(cart.count);
+      cartsPrice += parseFloat(cart.itemPrice || 0) * parseInt(cart.count);
+    }
+    var minusPrice = prices - cartsPrice;
+    if(minusPrice < 0) {
+      minusPrice = 0;
     }
     totalPrice = cartsPrice + totalFreight;
     this.setData({
       isFromCart: isFromCart,
       carts: carts,
+      prices: prices,
       totalFreight: totalFreight,
-      cartsPrice: cartsPrice,
-      totalPrice: totalPrice,
+      cartsPrice: cartsPrice.toFixed(2),
+      totalPrice: totalPrice.toFixed(2),
+      minusPrice: minusPrice.toFixed(2)
     })
   },
   onShow: function() {
-    console.log("onShow");
     if (app.invoice) {
         var invoiceType = app.invoice.type;
         var invoice = '不需要';
@@ -103,14 +100,22 @@ Page({
     if (!cart) {
       return;
     }
+
+    var prices = value * parseFloat(cart.itemOriginalPrice);
     cart.count = value;
-    var cartsPrice = value * cart.price;
+
+    var cartsPrice = value * parseFloat(cart.itemPrice);
+
     var totalPrice = cartsPrice + this.data.totalFreight;
+
+    var minusPrice = prices - totalPrice;
 
     this.setData({
       carts: this.data.carts,
       cartsPrice: cartsPrice.toFixed(2),
       totalPrice: totalPrice.toFixed(2),
+      minusPrice: minusPrice.toFixed(2),
+      prices: prices
     })
   },
   minus: function () {
@@ -119,14 +124,21 @@ Page({
       return;
     }
     cart.count -= 1;
-    var cartsPrice = this.data.cartsPrice;
-    cartsPrice -= cart.price;
-    var totalPrice = cartsPrice + this.data.totalFreight;
+    var cartsPrice = parseFloat(this.data.cartsPrice || 0);
+    cartsPrice -= cart.itemPrice;
 
+    var prices = parseFloat(this.data.prices || 0);
+    prices -= parseFloat(cart.itemOriginalPrice);
+
+    var totalPrice = cartsPrice + parseFloat(this.data.totalFreight || 0);
+
+    var minusPrice = prices - cartsPrice;
     this.setData({
       carts: this.data.carts,
-      cartsPrice: cartsPrice,
-      totalPrice: totalPrice,
+      cartsPrice: cartsPrice.toFixed(2),
+      totalPrice: totalPrice.toFixed(2),
+      minusPrice: minusPrice.toFixed(2),
+      prices: prices
     })
   },
   plus: function () {
@@ -135,57 +147,30 @@ Page({
       return;
     }
     cart.count += 1;
+    var prices = parseFloat(this.data.prices);
+    prices += parseFloat(cart.itemOriginalPrice || 0);
+
     var cartsPrice = parseFloat(this.data.cartsPrice);
-    cartsPrice += parseFloat(cart.price);
+    cartsPrice += parseFloat(cart.itemPrice || 0);
+
     var totalFreight = parseFloat(this.data.totalFreight)
     var totalPrice = cartsPrice + totalFreight;
+    var minusPrice = prices - cartsPrice
 
     this.setData({
       carts: this.data.carts,
       cartsPrice: cartsPrice.toFixed(2),
       totalPrice: totalPrice.toFixed(2),
+      minusPrice: minusPrice.toFixed(2),
+      prices: prices
     })
-  },
-  randomString: function (length, chars) {
-    var mask = '';
-    if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
-    if (chars.indexOf('A') > -1) mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if (chars.indexOf('#') > -1) mask += '0123456789';
-    if (chars.indexOf('!') > -1) mask += '~`!@#$%^&*()_+-={}[]:";\'<>?,./|\\';
-    var result = '';
-    for (var i = length; i > 0; --i) result += mask[Math.floor(Math.random() * mask.length)];
-    return result;
-  },
-  pad: function (number, length) {
-    var str = '' + number;
-    while (str.length < length) {
-      str = '0' + str;
-    }
-    return str;
-  },
-  trade: function () {
-    var date = new Date();
-    var yyyy = date.getFullYear().toString();
-    var MM = this.pad(date.getMonth() + 1, 2);
-    var dd = this.pad(date.getDate(), 2);
-    var hh = this.pad(date.getHours(), 2);
-    var mm = this.pad(date.getMinutes(), 2);
-    var ss = this.pad(date.getSeconds(), 2);
-    var SSS = this.pad(date.getMilliseconds(), 3);
-    return yyyy + MM + dd + hh + mm + ss + SSS;
-  },
-  MD5: function (s) {
-    function L(k, d) { return (k << d) | (k >>> (32 - d)) } function K(G, k) { var I, d, F, H, x; F = (G & 2147483648); H = (k & 2147483648); I = (G & 1073741824); d = (k & 1073741824); x = (G & 1073741823) + (k & 1073741823); if (I & d) { return (x ^ 2147483648 ^ F ^ H) } if (I | d) { if (x & 1073741824) { return (x ^ 3221225472 ^ F ^ H) } else { return (x ^ 1073741824 ^ F ^ H) } } else { return (x ^ F ^ H) } } function r(d, F, k) { return (d & F) | ((~d) & k) } function q(d, F, k) { return (d & k) | (F & (~k)) } function p(d, F, k) { return (d ^ F ^ k) } function n(d, F, k) { return (F ^ (d | (~k))) } function u(G, F, aa, Z, k, H, I) { G = K(G, K(K(r(F, aa, Z), k), I)); return K(L(G, H), F) } function f(G, F, aa, Z, k, H, I) { G = K(G, K(K(q(F, aa, Z), k), I)); return K(L(G, H), F) } function D(G, F, aa, Z, k, H, I) { G = K(G, K(K(p(F, aa, Z), k), I)); return K(L(G, H), F) } function t(G, F, aa, Z, k, H, I) { G = K(G, K(K(n(F, aa, Z), k), I)); return K(L(G, H), F) } function e(G) { var Z; var F = G.length; var x = F + 8; var k = (x - (x % 64)) / 64; var I = (k + 1) * 16; var aa = Array(I - 1); var d = 0; var H = 0; while (H < F) { Z = (H - (H % 4)) / 4; d = (H % 4) * 8; aa[Z] = (aa[Z] | (G.charCodeAt(H) << d)); H++ } Z = (H - (H % 4)) / 4; d = (H % 4) * 8; aa[Z] = aa[Z] | (128 << d); aa[I - 2] = F << 3; aa[I - 1] = F >>> 29; return aa } function B(x) { var k = "", F = "", G, d; for (d = 0; d <= 3; d++) { G = (x >>> (d * 8)) & 255; F = "0" + G.toString(16); k = k + F.substr(F.length - 2, 2) } return k } function J(k) { k = k.replace(/rn/g, "n"); var d = ""; for (var F = 0; F < k.length; F++) { var x = k.charCodeAt(F); if (x < 128) { d += String.fromCharCode(x) } else { if ((x > 127) && (x < 2048)) { d += String.fromCharCode((x >> 6) | 192); d += String.fromCharCode((x & 63) | 128) } else { d += String.fromCharCode((x >> 12) | 224); d += String.fromCharCode(((x >> 6) & 63) | 128); d += String.fromCharCode((x & 63) | 128) } } } return d } var C = Array(); var P, h, E, v, g, Y, X, W, V; var S = 7, Q = 12, N = 17, M = 22; var A = 5, z = 9, y = 14, w = 20; var o = 4, m = 11, l = 16, j = 23; var U = 6, T = 10, R = 15, O = 21; s = J(s); C = e(s); Y = 1732584193; X = 4023233417; W = 2562383102; V = 271733878; for (P = 0; P < C.length; P += 16) { h = Y; E = X; v = W; g = V; Y = u(Y, X, W, V, C[P + 0], S, 3614090360); V = u(V, Y, X, W, C[P + 1], Q, 3905402710); W = u(W, V, Y, X, C[P + 2], N, 606105819); X = u(X, W, V, Y, C[P + 3], M, 3250441966); Y = u(Y, X, W, V, C[P + 4], S, 4118548399); V = u(V, Y, X, W, C[P + 5], Q, 1200080426); W = u(W, V, Y, X, C[P + 6], N, 2821735955); X = u(X, W, V, Y, C[P + 7], M, 4249261313); Y = u(Y, X, W, V, C[P + 8], S, 1770035416); V = u(V, Y, X, W, C[P + 9], Q, 2336552879); W = u(W, V, Y, X, C[P + 10], N, 4294925233); X = u(X, W, V, Y, C[P + 11], M, 2304563134); Y = u(Y, X, W, V, C[P + 12], S, 1804603682); V = u(V, Y, X, W, C[P + 13], Q, 4254626195); W = u(W, V, Y, X, C[P + 14], N, 2792965006); X = u(X, W, V, Y, C[P + 15], M, 1236535329); Y = f(Y, X, W, V, C[P + 1], A, 4129170786); V = f(V, Y, X, W, C[P + 6], z, 3225465664); W = f(W, V, Y, X, C[P + 11], y, 643717713); X = f(X, W, V, Y, C[P + 0], w, 3921069994); Y = f(Y, X, W, V, C[P + 5], A, 3593408605); V = f(V, Y, X, W, C[P + 10], z, 38016083); W = f(W, V, Y, X, C[P + 15], y, 3634488961); X = f(X, W, V, Y, C[P + 4], w, 3889429448); Y = f(Y, X, W, V, C[P + 9], A, 568446438); V = f(V, Y, X, W, C[P + 14], z, 3275163606); W = f(W, V, Y, X, C[P + 3], y, 4107603335); X = f(X, W, V, Y, C[P + 8], w, 1163531501); Y = f(Y, X, W, V, C[P + 13], A, 2850285829); V = f(V, Y, X, W, C[P + 2], z, 4243563512); W = f(W, V, Y, X, C[P + 7], y, 1735328473); X = f(X, W, V, Y, C[P + 12], w, 2368359562); Y = D(Y, X, W, V, C[P + 5], o, 4294588738); V = D(V, Y, X, W, C[P + 8], m, 2272392833); W = D(W, V, Y, X, C[P + 11], l, 1839030562); X = D(X, W, V, Y, C[P + 14], j, 4259657740); Y = D(Y, X, W, V, C[P + 1], o, 2763975236); V = D(V, Y, X, W, C[P + 4], m, 1272893353); W = D(W, V, Y, X, C[P + 7], l, 4139469664); X = D(X, W, V, Y, C[P + 10], j, 3200236656); Y = D(Y, X, W, V, C[P + 13], o, 681279174); V = D(V, Y, X, W, C[P + 0], m, 3936430074); W = D(W, V, Y, X, C[P + 3], l, 3572445317); X = D(X, W, V, Y, C[P + 6], j, 76029189); Y = D(Y, X, W, V, C[P + 9], o, 3654602809); V = D(V, Y, X, W, C[P + 12], m, 3873151461); W = D(W, V, Y, X, C[P + 15], l, 530742520); X = D(X, W, V, Y, C[P + 2], j, 3299628645); Y = t(Y, X, W, V, C[P + 0], U, 4096336452); V = t(V, Y, X, W, C[P + 7], T, 1126891415); W = t(W, V, Y, X, C[P + 14], R, 2878612391); X = t(X, W, V, Y, C[P + 5], O, 4237533241); Y = t(Y, X, W, V, C[P + 12], U, 1700485571); V = t(V, Y, X, W, C[P + 3], T, 2399980690); W = t(W, V, Y, X, C[P + 10], R, 4293915773); X = t(X, W, V, Y, C[P + 1], O, 2240044497); Y = t(Y, X, W, V, C[P + 8], U, 1873313359); V = t(V, Y, X, W, C[P + 15], T, 4264355552); W = t(W, V, Y, X, C[P + 6], R, 2734768916); X = t(X, W, V, Y, C[P + 13], O, 1309151649); Y = t(Y, X, W, V, C[P + 4], U, 4149444226); V = t(V, Y, X, W, C[P + 11], T, 3174756917); W = t(W, V, Y, X, C[P + 2], R, 718787259); X = t(X, W, V, Y, C[P + 9], O, 3951481745); Y = K(Y, h); X = K(X, E); W = K(W, v); V = K(V, g) } var i = B(Y) + B(X) + B(W) + B(V); return i.toLowerCase()
-  },
+  }, 
   //弹出框让用户授权访问用户信息
   showSetting: function () {
     var that = this;
     wx.getSetting({
       success: function (e) {
-        console.log("getSetting!");
-        console.dir(e);
         if (e.authSetting && !e.authSetting['scope.address']) {
-          console.log("用户拒绝访问用户权限");
           wx.showModal({
             title: '未授权访问通讯地址',
             showCancel: false,
@@ -218,12 +203,9 @@ Page({
   },
   chooseAddress: function(e){
     var that = this;
-    console.dir(e);
     wx.chooseAddress({
       success(e) {
-        console.dir(e);
         var address = e.provinceName + e.cityName + e.countyName + e.detailInfo;
-        console.log(address);
         that.setData({
           address: address
         });
@@ -239,6 +221,7 @@ Page({
     })
   },
   toBuy: function () {
+    var that = this;
     var notice;
     if(!this.data.owner){
       notice = '请输入收件人姓名';
@@ -262,9 +245,9 @@ Page({
         username = this.data.owner;
     }
     invoice.username = username;
-    console.dir(invoice);
 
     var requestData = {
+      "orderType": "2",//1.小程序，2公众号
       "openid": app.globalData.userInfo.openid,
       "invoice": invoice,//发票信息
       "owner": this.data.owner,
@@ -278,84 +261,69 @@ Page({
       "total_price": this.data.totalPrice,//支付价格
       "products": this.data.carts
     };
-    console.dir(requestData);
-    // var that = this;
-    // var appid = 'wxae6424dbbecd71b7';
-    // var body = 'body';
-    // var mch_id = '1447295702';
-    // var nonce_str = this.randomString(32, '#aA');
-    // var notify_url = 'http://mybgi.genomics.cn/main.jsp';
-    // var openid = app.globalData.userInfo.openid;
-    // var out_trade_no = this.trade();//生成订单号
-    // var spbill_create_ip = this.data.ip;
-    // var total_fee = this.data.totalPrice * 100;
-    // var trade_type = 'JSAPI';
-    // var stringA = 'appid=' + appid + '&body=' + body + '&mch_id=' + mch_id + '&nonce_str=' + nonce_str + '&notify_url=' + notify_url + '&openid=' + openid + '&out_trade_no=' + out_trade_no + '&spbill_create_ip=' + spbill_create_ip + '&total_fee=' + total_fee + '&trade_type=' + trade_type;
-    // console.log('stringA = ' + stringA);
-    // var stringSignTemp = stringA + "&key=0fUK0QkQ7BXAHZV3zCyJNnH0iZWyRG2D"; //注：key为商户平台设置的密钥key
-    // var sign = that.MD5(stringSignTemp).toUpperCase();//注：MD5签名方式
-    // console.log('sign = ' + sign);
+    wx.showLoading({
+      title: '请稍后...',
+      mask: true
+    })
+    console.log(JSON.stringify(requestData))
     // wx.request({
-    //   method: 'post',
-    //   url: 'https://api.mch.weixin.qq.com/pay/unifiedorder',
-    //   data: '<xml>'
-    //   + '<appid>' + appid + '</appid>'
-    //   + '<body>' + body + '</body>'
-    //   + '<mch_id>' + mch_id + '</mch_id>'
-    //   + '<nonce_str>' + nonce_str + '</nonce_str>'
-    //   + '<notify_url>' + notify_url + '</notify_url>'
-    //   + '<openid>' + openid + '</openid>'
-    //   + '<out_trade_no>' + out_trade_no + '</out_trade_no>'
-    //   + '<spbill_create_ip>' + spbill_create_ip + '</spbill_create_ip>'
-    //   + '<total_fee>' + total_fee + '</total_fee>'
-    //   + '<trade_type>' + trade_type + '</trade_type>'
-    //   + '<sign>' + sign + '</sign>'
-    //   + '</xml>',
-    //   success: function (e) {
-    //     console.dir(e);
-    //     if (e.statusCode === 200) {
-    //       if (e.data) {
-    //         console.log(e);
-    //         var result = e.data;
-    //         if (result.indexOf('<prepay_id>') != -1) {
-    //           var rs = result.substring(result.indexOf('<prepay_id>') + 11, result.indexOf('</prepay_id>'))
-    //           var prepay_id = rs.substring(rs.indexOf('CDATA') + 6, rs.indexOf(']]'));
-    //           console.dir(prepay_id);
-
-    //           var timeStamp = Math.floor(new Date().getTime() / 1000) + '';
-    //           console.log("timeStamp = " + timeStamp);
-    //           var nonceStr = that.randomString(32, '#aA');
-    //           console.dir('nonceStr = ' + nonceStr);
-    //           var _package = 'prepay_id=' + prepay_id;
-    //           console.log('package =' + _package);
-
-    //           var stringB = 'appid=' + appid + '&nonceStr=' + nonceStr + '&package=' + _package + '&signType=MD5&timeStamp=' + timeStamp;
-    //           console.log('stringB =' +stringB);
-    //           var paySign = that.MD5(stringB).toUpperCase();  
-    //           console.log('paySign = ' + paySign);
-    //           wx.requestPayment({
-    //             timeStamp: timeStamp,
-    //             nonceStr: nonceStr,
-    //             package: _package,
-    //             signType: 'MD5',
-    //             paySign: paySign,
-    //             success: function (e) {
-    //               console.log("pay success!");
-    //               console.dir(e);
-    //             },
-    //             fail: function (e) {
-    //               console.log('failed');
-    //               console.dir(e);
-    //               console.log(e);
+    //   url: config.BASE_URL + '/wechat/createWeChatOrder.action',
+    //   header: {
+    //     'content-type': 'application/x-www-form-urlencoded'},
+    //   method: 'POST',
+    //   data: { 
+    //     "wechatOrderStr": JSON.stringify(requestData)
+    //     },
+    //   success: function(e) {
+    //     app.delCarts(that.data.carts);
+    //       if(e.data.success) {
+    //         var appid = e.data.object.appId;
+    //         var nonceStr = e.data.object.nonceStr;
+    //         var _package = e.data.object.package;
+    //         var paySign = e.data.object.paySign;
+    //         var signType = e.data.object.signType;
+    //         var timeStamp = e.data.object.timeStamp;
+            
+    //     wx.requestPayment({
+    //           timeStamp: timeStamp,
+    //           nonceStr: nonceStr,
+    //           "package": _package,
+    //           signType: signType,
+    //           paySign: paySign,
+    //           success: function (e) {
+    //             wx.hideLoading();
+    //             if (! that.data.isFromCart) {
+    //               app.isFromDetail = true;
+    //             } else {
+    //               app.isFromCartOrderSuccess = true;
     //             }
-    //           })
-    //         }
+    //             wx.navigateBack({
+    //               delta: 1
+    //             });
+    //           },
+    //           fail: function (e) {
+    //             wx.hideLoading();
+    //             wx.showToast({
+    //               title: '订单未支付',
+    //               mask: true,
+    //               duration: 3000
+    //             })
+    //             setTimeout(function(){
+    //               wx.redirectTo({
+    //                 url: '/pages/order/order',
+    //               })
+    //             }.bind(this), 3000);
+    //           }
+    //         })
     //       }
-    //     }
     //   },
-    //   fail: function (e) {
-    //     console.dir(e);
+    //   fail: function(e) {
+    //     wx.hideLoading();
+    //     wx.showToast({
+    //       title: '请求失败,请检查网络是否正常!',
+    //       duration: 3000
+    //     })
     //   }
-    // })
+    // }) 
   }
 })
